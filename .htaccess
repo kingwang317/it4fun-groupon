@@ -1,0 +1,23 @@
+Options +FollowSymLinks
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteBase /it4fun-groupon
+
+<Files .*>
+	Order Deny,Allow
+	Deny From All
+</Files>
+
+# Allow asset folders through
+RewriteRule ^(fuel/modules/(.+)?/assets/(.+)) - [L]
+
+# Protect application and system files from being viewed
+RewriteRule ^(fuel/install/.+|fuel/crons/.+|fuel/data_backup/.+|fuel/codeigniter/.+|fuel/modules/.+|fuel/application/.+|\.git.+) - [F,L]
+
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+RewriteRule .* index.php/$0 [L]
+</IfModule>
+Options -Indexes

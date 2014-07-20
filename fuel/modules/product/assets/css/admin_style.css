@@ -1,0 +1,95 @@
+div#main_content
+{
+	top: 0px;
+	left: 0px;
+}
+div.col-md-2.sheader
+{
+	border-bottom: 4px solid #9e7023;
+	height: 45px;
+}
+div.col-md-10.sheader
+{
+	border-bottom: 4px solid #b1b1b1;
+	margin-left: 0px;
+	height: 45px;
+	text-align: right;
+}
+select
+{
+	height: 20px;
+}
+/*
+input[type=text]
+{
+	font-size: 8px;
+	height: 12px;
+}
+input[type=email]
+{
+	height: 12px;
+}
+*/
+div.col-md-12
+{
+	width: 1024px;
+}
+
+table.table
+{
+	font-size: 12px;
+}
+
+table.table thead
+{
+	background-color: #ECECEC;
+	color: #666;
+}
+
+table.table tbody tr, thead tr
+{
+	padding: 5px;
+}
+table.table tbody tr:nth-child(even)
+{
+	background-color: #ECECEC;
+}
+
+.imgInfo
+{
+	display: none;
+}
+
+.btn-file {
+	position: relative;
+	overflow: hidden;
+	margin-bottom: 5px;
+}
+.btn-file input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 999px;
+    text-align: right;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    background: red;
+    cursor: inherit;
+    display: block;
+}
+
+table.imgtable tr td
+{
+	height: 25px;
+}
+
+.progress{width: 580px;}
+.progress-bar{float:left;width:0;height:100%;font-size:12px;line-height:20px;color:#fff;text-align:center;background-color:#428bca;-webkit-box-shadow:inset 0 -1px 0 rgba(0,0,0,0.15);box-shadow:inset 0 -1px 0 rgba(0,0,0,0.15);-webkit-transition:width .6s ease;transition:width .6s ease}
+
+tr.radio_cover, tr.radio_text, tr.radio_ad
+{
+	cursor: pointer;
+	text-align: center;
+}

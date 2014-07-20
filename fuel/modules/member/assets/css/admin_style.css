@@ -1,0 +1,63 @@
+div#main_content
+{
+	top: 0px;
+	left: 0px;
+}
+div.col-md-2.sheader
+{
+	border-bottom: 4px solid #9e7023;
+	height: 45px;
+}
+div.col-md-10.sheader
+{
+	border-bottom: 4px solid #b1b1b1;
+	margin-left: 0px;
+	height: 45px;
+	text-align: right;
+}
+select
+{
+	height: 20px;
+}
+/*
+input[type=text]
+{
+	font-size: 8px;
+	height: 12px;
+}
+input[type=email]
+{
+	height: 12px;
+}
+*/
+div.col-md-12
+{
+	width: 1070px;
+}
+
+table
+{
+	font-size: 12px;
+}
+
+table thead
+{
+	background-color: #ECECEC;
+	color: #666;
+	font-size: 14px;
+}
+table tbody tr, thead tr
+{
+	padding: 5px;
+}
+table tbody tr:nth-child(even)
+{
+	background-color: #ECECEC;
+}
+
+table th
+{
+	background-color: #ECECEC;
+	color: #666;
+	font-size: 14px;
+}

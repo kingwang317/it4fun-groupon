@@ -1,0 +1,27 @@
+.ico_codekind_lists
+{ 
+	-moz-background-size:16px 16px;
+	-webkit-background-size:16px 16px;
+	-o-background-size:16px 16px;
+	
+	background-image: url(../images/codekind_icon.png); 
+}
+.ico_codekind_codelists
+{ 
+	display: block; padding-left: 24px; list-style: none; background-position: 5px center; background-repeat: no-repeat; line-height: 20px; min-width: 16px; min-height: 16px; 
+	-moz-background-size:16px 16px;
+	-webkit-background-size:16px 16px;
+	-o-background-size:16px 16px;
+	
+	background-image: url(../images/codekind_icon.png); 
+}
+
+.mod_logo
+{
+	width: 32px;
+	height: 32px;
+	background-size: 32px 32px; 
+	background-repeat: no-repeat;
+	background-image: url(../images/codekind_icon.png); 
+	float:left
+}
