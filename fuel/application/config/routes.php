@@ -50,6 +50,9 @@ $route['payment/callback'] = 'payment/payment_callback';
 $route['update_my_data/(:num)'] = 'member_about/do_update_member/$1';
 $route['forgot_pwd'] = 'member_about/send_new_pwd';
 $route['chkLogin'] = 'member_about/chk_login';
+// $route['news/test'] = 'news_front/test';
+$route['news'] = 'news_front';
+$route['news/(:num)'] = 'news_front/index/$1';
 
 
 /*	

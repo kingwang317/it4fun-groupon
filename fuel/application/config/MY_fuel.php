@@ -31,7 +31,8 @@ $config['modules_allowed'] = array(
 	'backup',
 	'seo',
 	'validate',
-	'cronjobs'
+	'cronjobs',
+	'news'
 	);
 
 // whether the admin backend is enabled

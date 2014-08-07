@@ -12,8 +12,8 @@ $(document).ready(function(){
         //$("#news_text_1").hide(); //看客戶要不要
         //$("#news_title_1").show();
  
-    $('#news_title_1').click(function(){
-    $("#news_text_1").slideToggle();
+    $('.news_title').click(function(){
+    $(".news_text").slideToggle();
     });
  
 });
