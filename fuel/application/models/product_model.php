@@ -12,7 +12,7 @@ class Product_model extends CI_Model {
                 FROM mod_product p, mod_order o  
                 WHERE p.pro_status='pro_status_0001' AND p.pro_off_time > '$today' AND p.pro_id=o.product_id  AND p.pro_id <> '$pro_id'
                 GROUP BY p.pro_id 
-                ORDER BY sell_cnt DESC, p.modi_time DESC LIMIT 0, 5";
+                ORDER BY sell_cnt DESC, p.modi_time DESC LIMIT 0, 4";
 
         $query = $this->db->query($sql);
 
@@ -33,7 +33,7 @@ class Product_model extends CI_Model {
                     else
                     {
                         $result[$key]->photo->ga_name = "no image";
-                        $result[$key]->photo->ga_url = "/assets/images/logo_fuel.png";
+                        $result[$key]->photo->ga_url = "templates/images/about_logo.jpg";
                         $result[$key]->photo->ga_w = "240";
                         $result[$key]->photo->ga_h = "240";
                     }
@@ -46,15 +46,36 @@ class Product_model extends CI_Model {
         return;
     }
 
-    function get_pro_list($code_key)
+    public function get_code($codekind_key, $filter="")
+    {
+        $sql = @"SELECT id,code_name, code_key, code_value1 FROM mod_code WHERE codekind_key=?".$filter;
+        $para = array($codekind_key);
+        $query  = $this->db->query($sql, $para);
+
+        if($query->num_rows() > 0)
+        {
+            $results = $query->result();
+
+            return $results;
+        }
+
+        return;
+    }
+
+    function get_cart_pro_list($pro_ids)
     {
         $result = FALSE;
         $today = date('Y-m-d h:y:s');
 
-        $sql = @"SELECT pro_id, pro_name, pro_add_time, pro_off_time, pro_cover_photo 
-                FROM mod_product 
-                WHERE pro_status='pro_status_0001' AND pro_off_time > '$today' AND pro_cate='$code_key' AND pro_status='pro_status_0001'
-                ORDER BY pro_order ASC, modi_time DESC";
+        $sql = @"SELECT * FROM mod_product a inner join  (
+                    SELECT pro_id AS p_id ,MAX(plan_price) AS plan_price FROM mod_plan GROUP BY pro_id
+                )  b on a.pro_id = b.p_id
+                WHERE pro_status='pro_status_0001' AND pro_off_time > '$today'  
+                AND a.pro_id in ($pro_ids)
+                ORDER BY pro_id  DESC ";
+
+                // print_r($sql);
+                // die;
 
         $query = $this->db->query($sql);
 
@@ -76,7 +97,58 @@ class Product_model extends CI_Model {
                     {
                         $result[$key]->photo = new stdClass();
                         $result[$key]->photo->ga_name = "no image";
-                        $result[$key]->photo->ga_url = "/assets/images/logo_fuel.png";
+                        $result[$key]->photo->ga_url = "templates/images/about_logo.jpg";
+                        $result[$key]->photo->ga_w = "240";
+                        $result[$key]->photo->ga_h = "194";
+                    }
+                }
+            }
+
+            return $result;
+        }
+
+        return;
+    }
+
+    function get_pro_list($filter,$limit)
+    {
+        $result = FALSE;
+        $today = date('Y-m-d h:y:s');
+
+        $sql = @"SELECT pro_id, pro_name, pro_add_time, pro_off_time, pro_cover_photo ,pro_summary,pro_promote,
+                pro_group_price,pro_original_price , count(pro_id)  as pro_selled_cnt
+                FROM mod_product p left join
+                mod_order mo on p.pro_id=mo.product_id
+                WHERE pro_status='pro_status_0001' AND pro_off_time > '$today' 
+                $filter
+                GROUP BY pro_id, pro_name, pro_add_time, pro_off_time, pro_cover_photo ,pro_summary,pro_promote,
+                pro_group_price,pro_original_price
+                ORDER BY pro_order ASC, p.modi_time DESC $limit ";
+
+                // print_r($sql);
+                // die;
+
+        $query = $this->db->query($sql);
+
+        if ($query->num_rows() > 0)
+        {
+            $result = $query->result();
+            
+            if(isset($result))
+            {
+                foreach($result as $key=>$row)
+                {
+                    $photo = $this->get_pro_cover($row->pro_id, 'product', $row->pro_cover_photo);
+
+                    if(isset($photo))
+                    {
+                        $result[$key]->photo = $photo;
+                    }
+                    else
+                    {
+                        $result[$key]->photo = new stdClass();
+                        $result[$key]->photo->ga_name = "no image";
+                        $result[$key]->photo->ga_url = "templates/images/about_logo.jpg";
                         $result[$key]->photo->ga_w = "240";
                         $result[$key]->photo->ga_h = "194";
                     }
@@ -120,7 +192,7 @@ class Product_model extends CI_Model {
         }
         else
         {
-            $row->ga_url = "/assets/images/logo_fuel.png";
+            $row->ga_url = "templates/images/about_logo.jpg";
 
             return $row;
         }

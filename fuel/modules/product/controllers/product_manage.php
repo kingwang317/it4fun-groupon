@@ -303,7 +303,7 @@ class Product_manage extends Fuel_base_controller {
 		$view_name = "新增產品";
 		$base_url = base_url();
 
-		$pro_cate_results = $this->product_manage_model->get_code('product_cate', ' AND parent_id=-1 ORDER BY code_key ASC');
+		$pro_cate_results = $this->product_manage_model->get_code('product_cate', ' AND parent_id<>-1 ORDER BY code_key ASC');
 		$pro_status_results = $this->product_manage_model->get_code('pro_status', ' ORDER BY code_key ASC');
 
 		$vars['view_name'] = $view_name;
@@ -463,7 +463,8 @@ class Product_manage extends Fuel_base_controller {
 
 		$pro_result = $this->product_manage_model->get_pro_detail($pro_id);
 
-		$pro_cate_results = $this->product_manage_model->get_code('product_cate', ' AND parent_id=-1 ORDER BY code_key ASC');
+		$pro_cate_results = $this->product_manage_model->get_code('product_cate', ' AND parent_id<>-1 ORDER BY code_key ASC');
+		$pro_promote_results = $this->product_manage_model->get_code('promot_status', ' AND parent_id<>-1 ORDER BY code_key ASC');
 		$pro_status_results = $this->product_manage_model->get_code('pro_status', ' ORDER BY code_key ASC');
 		$pro_plan_results = $this->product_manage_model->get_plan_for_pro_id($pro_id);
 		$have_photo = $this->product_manage_model->get_pro_photo($pro_id);
@@ -485,6 +486,7 @@ class Product_manage extends Fuel_base_controller {
 		$vars['back_url'] = $base_url."fuel/product/lists";
 		$vars['pro_result'] = $pro_result;
 		$vars['pro_cate_results'] = $pro_cate_results;
+		$vars['pro_promote_results'] = $pro_promote_results;
 		$vars['pro_status_results'] = $pro_status_results;
 		$vars['pro_plan_results'] = $pro_plan_results;
 		$vars['have_photo'] = $have_photo;
@@ -524,7 +526,7 @@ class Product_manage extends Fuel_base_controller {
 		$r_data['pro_group_price'] = $this->input->get_post("pro_group_price");
 		$r_data['pro_order'] = $this->input->get_post("pro_order");
 		$r_data['pro_status'] = $this->input->get_post("pro_status");
-		$r_data['pro_status'] = $this->input->get_post("pro_status");
+		$r_data['pro_promote'] = $this->input->get_post("pro_promote");
 		$r_data['seo_title'] = $this->input->get_post("seo_title");
 		$r_data['seo_kw'] = $this->input->get_post("seo_kw");
 		$r_data['seo_desc'] = $this->input->get_post("seo_desc");

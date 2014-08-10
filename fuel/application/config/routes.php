@@ -50,9 +50,13 @@ $route['payment/callback'] = 'payment/payment_callback';
 $route['update_my_data/(:num)'] = 'member_about/do_update_member/$1';
 $route['forgot_pwd'] = 'member_about/send_new_pwd';
 $route['chkLogin'] = 'member_about/chk_login';
-// $route['news/test'] = 'news_front/test';
+$route['category/(:num)'] = 'home/category/$1';
+$route['category'] = 'home/category/47';
 $route['news'] = 'news_front';
 $route['news/(:num)'] = 'news_front/index/$1';
+$route['addToCart/(:num)/(:num)'] = 'prod/do_set_cart_info/$1/$2';
+$route['removeFromCart/(:num)'] = 'prod/do_remove_cart/$1'; 
+$route['cart'] = 'prod/cart';
 
 
 /*	

@@ -1,55 +1,100 @@
-  <link href="<?=site_url()?>templates/css/bootstrap.css" rel="stylesheet">
-  <script type="text/javascript" src="<?=site_url();?>templates/Scripts/cart.js" ></script> 
-        <div id="navigation">
-          <div class="bar">
-            <a class='logo' href="<?php echo site_url();?>"></a>
-            <!--<div class="menu1"><a href="<?php echo $pro_cate_1?>" ></a></div>-->
-            <div class="menu2"><a href="<?php echo $pro_cate_2?>" ></a></div>
-          </div>
-        </div>
-  <div id="buystep1">
-    <div class="txt"></div>
-    <div class="line"><div></div></div>
-  </div>        
-  <div id="buystep1_info">
-    <form action="<?php echo $payment_url?>" method="POST" id="sendForm">
-      <div class="content1">
-        <div class="photo"><img src="<?php echo $base_url.$pro_cover_photo->ga_url?>" width="300" height="220"></div>
-        <div class="contnet">
-          <div class="name"><?php echo $pro_detail_results->pro_name?></div>
-          <div class="desc"><?php echo $pro_detail_results->pro_summary?></div>
-          <div class="title">請選擇方案：</div>
-          <ul id="planStyle">
-          <?php 
-            if(isset($plan_results))
-            {
-              foreach($plan_results as $row)
-              {
-          ?>
-            <li <?php if($row->is_empty==1) echo "class='Isempty'"?>>
-              <input type="radio" name="pro_plan" class="plan_price" price="<?php echo $row->plan_price?>" value="<?php echo $row->plan_id?>" <?php if($row->is_empty==1) echo "DISABLED"?>>
-              <?php echo $row->plan_desc?>
-              <span>$<?php echo $row->plan_price?></span> 
-              <span style="color:red"><?php if($row->is_empty==1) echo "銷售一空"?></span>
-            </li>                
-          <?php
-              }
+  
+<!--banner-->
+<div id="banner_title">
+<img src="<?php echo site_url() ?>templates/images/banner_title.jpg">
+</div>
+<div id="cart">
+
+<table width="100" class="table table-striped">
+  <tr bgcolor="#696969" >
+  <th scope="col">圖片</th>
+    <th scope="col">商品名稱</th>
+    <th scope="col">數量</th>
+    <th scope="col">單價</th>
+    <th scope="col">小計</th>
+    <th scope="col">取消</th>
+  </tr>
+  <?php if (isset($pro_cart)): ?>
+      <?php $total_price = 0; ?>
+      <?php foreach ($pro_cart as $key => $value): ?>
+      <tr>
+        <?php 
+          $num = $cart[$value->pro_id]["num"]; 
+          $price = $value->plan_price;
+          $total_price += $price * $num;
+        ?>
+        <td valign="center"><img style="width:128px" src='<?php echo $value->photo->ga_url ?>'></td>
+        <td valign="center"><?php echo $value->pro_name ?></td>
+        <td valign="center"><?php echo $num ?></td>
+        <td valign="center"><?php echo $value->plan_price ?></td>
+        <td valign="center"><?php echo $price*$num ?></td>
+        <td valign="center"><img class="cancel_img" data-proid='<?php echo $value->pro_id; ?>' src="<?php echo site_url() ?>templates/images/cart_cancel.png"> 取消</td>
+        
+      </tr>
+      <?php endforeach ?>
+       <!--最下面的運費-->
+      <tr>
+        <td valign="center"><img src="<?php echo site_url() ?>templates/images/cart_icon_1.png"></td>
+        <td valign="center">運費（滿2000免運）</td>
+        <td valign="center">&nbsp;  </td>
+          <td valign="center"></td>
+        <td valign="center">150</td>
+        <td valign="center">&nbsp; </td>
+      </tr>
+      <!--繼續借用表格的加總-->
+      <?php 
+          if ($total_price < 2000) {
+            $total_price += 150;
+          }
+      ?>
+      <tr>
+        <td valign="center"><img src="<?php echo site_url() ?>templates/images/cart_money.png"></td>
+        <td valign="center" style="font-size:16px;">消費金額</td>
+        <td valign="center"><span style="color:red;font-size:16px;"><?php echo $total_price ?></span></td>
+        <td colspan="3" align="right" valign="center" style="line-height:70px;"><img src="<?php echo site_url() ?>templates/images/cart_btn1.png"> <br><img  onclick="$('#divShow').show();" id="login_btn" style="cursor:pointer;" src="<?php echo site_url() ?>templates/images/cart_btn2.png"></td>
+      </tr>
+  <?php else: ?>
+    <tr>
+        <td colspan="5" valign="center">
+            購物車目前無商品
+        </td>
+    </tr>
+  <?php endif ?>
+ 
+  
+</table>
+
+</div>
+
+<script type="text/javascript">
+    $(function(){
+        $("#divShow").hide();
+        
+        $('body').click(function(evt) {
+            if($(evt.target).parents("#divShow").length==0 && 
+                evt.target.id != "login_btn" && evt.target.id != "divShow") {
+                $('#divShow').hide();
             }
-          ?>
-          </ul>
-        </div>
-      </div>
-      <div class="content2">
-        <div class="icon"></div>
-        <div class="sum">消費金額：</div>
-        <div class="price">NT$<span></span>元</div>
-        <a class="step1btn1" url="<?php echo $payment_url?>"></a>
-        <a class="step1btn2" style="display:none"></a>
-      </div>
+        });
+    });
+</script>
+<div id="divShow">
+<div id="login_bg" style=" display: block;"></div>
+<div id="login_box" style=" display: block;">
+    <div onclick="$('#divShow').hide();" style="float:right; top:0px; width:40px; height:20px;">關閉 X</div>
+    <form >
+      
+      <h4>歡迎回來！請輸入帳號密碼： </h4>
+      <!-- <span  style="color:red">error</span><br> -->
+      電子信箱：<input type="text" class="mail"><br>
+      輸入密碼：<input type="password" ><br>
+        <a >忘記密碼</a>
+        <img src="<?php echo site_url() ?>templates/images/login_btn.png"></div>
     </form>
   </div>
+</div>
 
-  <div id="cart_black"></div>
+ <!--  <div id="cart_black"></div>
   <div id="cart_login">
     <form action="<?php echo $login_url?>" method="POST" id="loginForm">
       <div class="close">X</div>
@@ -68,16 +113,32 @@
       <span id="pwd_error_msg" style="color:red"></span>
       <div class="mail">電子信箱：<input type="text" class="mail" name="cemail" id="cemail"></div>
       <button class="btn btn-warning" id="pwdButton" uri="<?php echo $forgot_url?>" style="margin-left:150px">送出</button>
-  </div>
+  </div> -->
+
   <script>
     $(document).ready(function($) {
+
+
+      $('.cancel_img').on("click", function (e) {
+        var pro_id = $(this).data('proid');
+        var deleteConfirm = confirm("您確定將商品從購物車移除?");
+        if (deleteConfirm) {
+          var url = '<?php echo site_url()."removeFromCart/"; ?>' + pro_id;
+          $.get(url, function(data) {
+            /*optional stuff to do after success */
+            alert('商品已從購物車移除！');
+            location.reload();
+          });
+        }  
+     });
+
       $(".plan_price").click(function(){
         var price = $(this).attr('price');
         $(".price").find("span").text(price);
       });
 
       $("#loginButton").click(function(){
-        var url = '<?php echo $login_url?>';
+        var url = '<?php echo "" ?>';
         var member_account = $('#member_account').val();
         var password = $('#password').val();
         var chkMail = ValidEmail(member_account);

@@ -1,48 +1,25 @@
+ 
 
 <!--banner-->
-<div id="banner">
-  <ul class="bxslider">
-   
-<?php
-      if(isset($ad_results))
-      {
-        foreach($ad_results as $ad_row)
-        {
-
-?> 
-    <li>
-      <div id="banner_img" style="background-image:url(<?php echo $base_url.$ad_row->ga_url?>);cursor:pointer;" onclick="location.href='<?php echo $prod_detail_url.$ad_row->pro_id?>';">
-        <div id="banner_text" >
-        <h1><?php echo $ad_row->pro_name?></h1>
-        <p><?php echo mb_substr($ad_row->pro_summary,0,70,"utf-8");?></p>
-        </div>
-      </div>
-    </li>
-<?php
-        }
-      }
-?>
-      </ul>
-  <script type="text/javascript">
-  $(document).ready(function(){
-    $('.bxslider').bxSlider();
-  });
-  </script>
-
+<div id="banner_title">
+<img src="<?php echo site_url() ?>templates/images/banner_title.jpg">
 </div>
-
-<!--banner-->
 <div id="category">
-<ul>
-  <?php if (isset($pro_cate_result)): ?>
+<ul> 
+ <?php if (isset($pro_cate_result)): ?>
     <?php foreach ($pro_cate_result as $key => $value): ?>
-      <li ><a href="category/<?php echo $value->id ?>"><?php echo $value->code_name ?></a></li>
+  
+      <?php if ($value->id==$pro_cate): ?>
+        <li class="set"><?php echo $value->code_name ?></li>
+      <?php else: ?>
+        <li><a href="<?php echo site_url()."category/".$value->id ?>"><?php echo $value->code_name ?></a></li>
+      <?php endif ?>
     <?php endforeach ?>
   <?php endif ?>
-
 </ul>
 <div id="clear"></div>
 </div>
+
 <!--product box-->
 <div id="product_box">
 
@@ -88,6 +65,3 @@
 ?> 
 
 </div>
- 
-
- 

@@ -34,12 +34,12 @@ class Product_manage_model extends MY_Model {
 	{
 		$sql = @"SELECT a.pro_id, a.pro_name, a.pro_add_time, a.pro_off_time, a.modi_time, b.code_name, COUNT(c.order_id) AS sell_cnt, SUM(c.order_price) AS sell_amt, click_num 
 				FROM mod_product AS a
-				INNER JOIN mod_code AS b ON a.pro_cate=b.code_key 
+				INNER JOIN mod_code AS b ON a.pro_cate=b.id 
 				LEFT JOIN mod_order AS c ON c.product_id = a.pro_id AND c.RtnCode=1 
 				".$filter."
 				GROUP BY a.pro_id
 				ORDER BY a.modi_time DESC
-				LIMIT $dataStart, $dataLan";
+				LIMIT $dataStart, $dataLan"; 
 		$query = $this->db->query($sql);
 
 		if($query->num_rows() > 0)
@@ -70,7 +70,7 @@ class Product_manage_model extends MY_Model {
 
 	public function get_code($codekind_key, $filter="")
 	{
-		$sql = @"SELECT code_name, code_key, code_value1 FROM mod_code WHERE codekind_key=?".$filter;
+		$sql = @"SELECT id,code_name, code_key, code_value1 FROM mod_code WHERE codekind_key=?".$filter;
 		$para = array($codekind_key);
 		$query 	= $this->db->query($sql, $para);
 
@@ -114,13 +114,14 @@ class Product_manage_model extends MY_Model {
 										pro_off_time, 
 										pro_order,
 										pro_status,
+										pro_promote,
 										seo_title,
 										seo_kw,
 										seo_desc,
 										create_time,
 										modi_time
 										) 
-							VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())";
+							VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())";
 		$para = array(
 						$r_data['pro_name'],
 						$r_data['pro_cate'],
@@ -133,6 +134,7 @@ class Product_manage_model extends MY_Model {
 						$r_data['pro_off_time'],
 						$r_data['pro_order'],
 						$r_data['pro_status'],
+						$r_data['pro_promote'],
 						$r_data['seo_title'],
 						$r_data['seo_kw'],
 						$r_data['seo_desc']
@@ -168,13 +170,14 @@ class Product_manage_model extends MY_Model {
 										pro_off_time, 
 										pro_order,
 										pro_status,
+										pro_promote,
 										seo_title,
 										seo_kw,
 										seo_desc,
 										create_time,
 										modi_time
 										) 
-							VALUES (null, null, null, null, null, null, null, null, null, null, null, null, 'pro_status_0002', null, null, null, NOW(), null)";
+							VALUES (null, null, null, null, null, null, null, null, null, null, null, null, 'pro_status_0002',null, null, null, null, NOW(), null)";
 
 		$success = $this->db->query($sql);
 		$pro_id = $this->db->insert_id();
@@ -213,6 +216,7 @@ class Product_manage_model extends MY_Model {
 						pro_off_time=?,
 						pro_order=?,
 						pro_status=?,
+						pro_promote=?,
 						seo_title=?,
 						seo_kw=?,
 						seo_desc=?,
@@ -233,6 +237,7 @@ class Product_manage_model extends MY_Model {
 						$r_data['pro_off_time'],
 						$r_data['pro_order'],
 						$r_data['pro_status'],
+						$r_data['pro_promote'],
 						$r_data['seo_title'],
 						$r_data['seo_kw'],
 						$r_data['seo_desc'],

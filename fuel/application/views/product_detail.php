@@ -1,155 +1,122 @@
-        <script type="text/javascript" src="<?=site_url();?>templates/Scripts/prod.js" ></script> 
-        <div id="fb-root"></div>
-        <script>(function(d, s, id) {
-          var js, fjs = d.getElementsByTagName(s)[0];
-          if (d.getElementById(id)) return;
-          js = d.createElement(s); js.id = id;
-          js.src = "//connect.facebook.net/zh_TW/all.js#xfbml=1&appId=181555878720296";
-          fjs.parentNode.insertBefore(js, fjs);
-        }(document, 'script', 'facebook-jssdk'));
+ 
+   
+  <!--banner-->
+<div id="banner_title">
+<img src="<?php echo site_url() ?>templates/images/banner_title.jpg">
+</div>
+<div id="category">
+<ul> 
+ <?php if (isset($pro_cate_result)): ?>
+    <?php foreach ($pro_cate_result as $key => $value): ?>
+  
+      <?php if ($value->id==$pro_detail_results->pro_cate): ?>
+        <li class="set"><?php echo $value->code_name ?></li>
+      <?php else: ?>
+        <li><a href="<?php echo site_url()."category/".$value->id ?>"><?php echo $value->code_name ?></a></li>
+      <?php endif ?>
+    <?php endforeach ?>
+  <?php endif ?>
+</ul>
+<div id="clear"></div>
+</div>
 
-        jQuery(document).ready(function($) {
-          $("#fb_share").click(function(){
-            var url = $(this).attr('url');
-            var caption = $(this).attr('caption');
-            FB.ui({
-              method: 'feed',
-              display: 'popup',
-              link: url,
-              caption: caption,
-            }, function(response){});
-          });
-        });
+<div id="product-detail-box">
+<div id="left">
+<img src="<?php echo $base_url.$pro_photo_data->ga_url?>"><br>
+<br>
+<div class="fb-like" data-layout="standard" data-action="like" data-show-faces="true" data-share="true"></div>
+<div id="textbox">
+<h2><?php echo $pro_detail_results->pro_name?></h2>
+<p>
+<?php echo $pro_detail_results->pro_summary?>
+</p>
+</div>
+ 
+　<?php echo htmlspecialchars_decode($pro_detail_results->pro_desc)?>
+ 
+<div id="getting-started" style="color:#707070;font-size:18px;"></div>
+ 
+    <script type="text/javascript">
+        $("#getting-started")
+        .countdown('<?php echo str_replace("-","/",$pro_detail_results->pro_off_time)?>', function(event) {
+        $(this).html(event.strftime('搶購時間剩餘： %D 天 %H 時 %M 分 %S 秒 '));
+      });
+     </script>
+<div id="product_cart">
+<div id="left">
+<br><s>原價：<?php echo $pro_detail_results->pro_original_price?></s><br>
+<?php 
+$price = 0; 
+$num = 0;
 
-        </script>
-        <div id="navigation">
-          <div class="bar">
-            <a class='logo' href="<?php echo site_url();?>"></a>
-            <!--<div class="menu1"><a href="<?php echo $pro_cate_1?>" ></a></div>-->
-            <div class="menu2"><a href="<?php echo $pro_cate_2?>" ></a></div>
-          </div>
-        </div>
-              
-        <div id="prod">
-          <div class="prod_1">
-            <div class="photo"><img src="<?php echo $base_url.$pro_photo_data->ga_url?>" width="640" height="480"></div>
-            <div class="info">
-              <div class="info_1">
-                <div class="block">
-                  <p class="prodname"><?php echo $pro_detail_results->pro_name?></p>
-                  <p class="proddesc">
-                    <?php echo $pro_detail_results->pro_summary?>
-                  </p>
-                </div>
-              </div>
-              <div class="info_2" startDate="<?php echo $system_time;?>" endDate="<?php echo str_replace("-","/",$pro_detail_results->pro_off_time)?>" >
-                <div class="block">
-                  <ul>
-                    <li class="l_1">限時販售
-                      <span class="day"></span>天
-                      <span class="hour"></span>時
-                      <span class="min"></span>分
-                      <span class="sec"></span>秒
-                      <span class="msec"></span>
-                    </li>
-                    <li class="l_2"><S>原價：NT$<?php echo $pro_detail_results->pro_original_price?>元</S></li>
-                    <li class="l_3">團購價：NT$<?php echo $pro_detail_results->pro_group_price?>元</li>
-                    <li class="l_4">現省：NT$<?php echo $pro_detail_results->pro_original_price-$pro_detail_results->pro_group_price?>元</li>
-                    <li class="l_5">已售出 <?php echo $pro_selled_cnt?>份</li>
-                  </ul>
-                </div>
-              </div>
-              <?php
-                if($pro_offed === false)
-                {
-              ?>
-                <a class="buy_btn" href="<?php echo $go_cart_url?>"></a>
-              <?php
-                }
-                else
-                {
-              ?>
-                <a class="buy_btn" href="javascript: void(0); alert('團購已過期')"></a>
-              <?php
-                }
-              ?>
-              </a>
-            </div>
-          </div>
-          <div class="prod_2">
-            <div class="fb-like" data-href="<?php echo current_url();?>" data-layout="standard" data-action="like" data-show-faces="false" data-share="false"></div>
-          </div>
-          <div class="prod_3">
-            <div class="left">
-              <div class="abgne_tab">
-                <ul class="tabs">
-                  <li><a href="#tab1">商品說明</a></li>
-                  <li><a href="#tab2">商品規格</a></li>
-                  <li><a href="#tab3">購買需知</a></li>
-                </ul>
+if (isset($pro_plan_results)) {
+  $price = $pro_plan_results->plan_price;
+  $num = $pro_plan_results->plan_num;
+}
 
-                <div class="tab_container">
-                  <div id="tab1" class="tab_content">
-                    <div id="tab_1_content">
-                      <?php echo htmlspecialchars_decode($pro_detail_results->pro_desc)?>
-                    </div>
-                  </div>
-                  <div id="tab2" class="tab_content">
-                    <div id="tab_2_content">
-                    <?php echo htmlspecialchars_decode($pro_detail_results->pro_format)?>
-                    </div>
-                  </div>
-                  <div id="tab3" class="tab_content">
-                    <div id="tab_3_content">
-                    <?php echo htmlspecialchars_decode($pro_detail_results->pro_ship_note)?>
-                    </div>       
-                  </div>
-                </div>
-              </div>
-              <?php
-                if($pro_offed === false)
-                {
-              ?>
-                <a class="buy_btn" href="<?php echo $go_cart_url?>"></a>
-              <?php
-                }
-                else
-                {
-              ?>
-                <a class="buy_btn" href="javascript: void(0); alert('團購已過期')"></a>
-              <?php
-                }
-              ?>
-              
-            </div>
-            <div class="right">
-              <?php
-                if(isset($pro_top_result))
-                {
-                  foreach($pro_top_result as $row)
-                  {
-              ?>
-                    <div class="subprod" startDate="<?php echo $system_time?>" endDate="<?php echo $row->pro_off_time?>" link="<?php echo $prod_detail_url.$row->pro_id?>">
-                      <div class="img"><img src="<?php echo $base_url.$row->photo->ga_url?>" title="<?php echo $row->pro_name?>" width="240" height="240"></div>
-                      <div class="black">
-                        <div class='blackbg'></div>
-                        <div class='txt'>
-                          <span class="day"></span>天
-                          <span class="hour"></span>時
-                          <span class="min"></span>分
-                          <span class="sec"></span>秒
-                        </div>
-                      </div>
-                    </div>  
-              <?php
-                  }
-                }
-              ?>
+?>
+<span style="color:#af201a;font-size:36px;">特價＄<?php echo $price?></span><br>
+<span style="color:#707070;font-size:18px;"> <?php echo $pro_selled_cnt?>份已購買 </span>
+</div>
+<div id="right">
+數量： 
+<select id="num" style="width:70px;margin:0px 10px;">
+  <?php if ($num > 0): ?>
+     <?php for ($i=1;$i<=$num;$i++): ?>
+      <option value="<?php echo $i ?>"><?php echo $i ?></option>
+    <?php endfor ?>
+  <?php else: ?>
+    <option value="0">缺貨中</option>
+  <?php endif ?>
+ 
+</select><img id="img_cart" src="<?php echo site_url() ?>templates/images/cart-btn.jpg">
+</div>
+</div>
+</div>
 
+<?php if (isset($pro_top_result) && sizeof($pro_top_result) > 0 ): ?>
+<div id="right">
+銷售排行：
+<?php foreach ($pro_top_result as $key => $value): ?>
+  <a href='<?php echo site_url()."prod/detail/$value->pro_id.php"; ?>'><img style="width:227px" src="<?php echo $base_url.$value->photo->ga_url?>"></a><br> 
+<?php endforeach ?>
+</div>
+<div id="clear"></div>
+</div>
+<?php endif ?>
 
-            </div>
-          </div>          
-        </div>        
-        <br class="clear"/>
-        <br/>
-        <br/>
+<?php if (isset($pro_interest_results) && sizeof($pro_interest_results) > 0 ): ?>
+<div id="interest">
+您可能也有興趣：<br> 
+<?php $i = 0; ?>
+<?php foreach ($pro_interest_results as $key => $value): ?>
+  <a href='<?php echo site_url()."prod/detail/$value->pro_id.php"; ?>'><img 
+    <?php if ($i==0): ?>
+    style="margin-left:0px;width:227px"
+    <?php else: ?>
+    style="width:227px" 
+    <?php endif ?>
+  src="<?php echo $base_url.$value->photo->ga_url?>"></a>
+<?php $i++; ?>
+<?php endforeach ?>
+<!-- <img  style="margin-left:0px;" src="<?php echo site_url() ?>templates/images/product-small.jpg"> -->
+</div>
+<?php endif ?>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+     $('#img_cart').on("click", function (e) {
+        var num = $('#num').val();
+        if (num > 0) {
+            var url = '<?php echo site_url()."addToCart/$pro_detail_results->pro_id/"; ?>' + num;
+            $.get(url, function(data) {
+              /*optional stuff to do after success */
+              alert('商品已加入購物車！');
+            });
+        }else{
+            alert('商品缺貨中！');
+        }
+     });
+  });
+</script>
+

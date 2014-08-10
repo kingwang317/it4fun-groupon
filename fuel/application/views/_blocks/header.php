@@ -26,31 +26,42 @@
     <script type="text/javascript" src="<?=site_url()?>templates/Scripts/lib/ga.js"></script>
     <script type="text/javascript" src="<?=site_url()?>templates/js/bootstrap.min.js"></script> 
     <script type="text/javascript" src="<?=site_url()?>templates/js/jquery.bxslider.min.js"></script> 
+
+<script src="<?=site_url()?>templates/js/jquery.countdown.min.js"></script>
+
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/zh_TW/sdk.js#xfbml=1&appId=256910054346949&version=v2.0";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
     <?php 
       define('FUELIFY', FALSE); //hide edit bar
     ?>
   </head>
   <body>
+    <div id="fb-root"></div>
     <div id="header">
-      <a href="index.php"><img src="<?=site_url()?>templates/images/logo.jpg" id="logo"></a>
+      <a href="<?php echo site_url() ?>"><img src="<?=site_url()?>templates/images/logo.jpg" id="logo"></a>
       <ul>
         <li>
-          <a href="cart.php"><img src="<?=site_url()?>templates/images/cart_icon.png"> 購物車</a>
+          <a href="<?php echo site_url() ?>cart"><img src="<?=site_url()?>templates/images/cart_icon.png"> 購物車</a>
         </li>
         <li>
-          <a href="about">關於我們</a>
+          <a href="<?php echo site_url() ?>about">關於我們</a>
         </li>
         <li>
-          <a href="news">最新消息</a>
+          <a href="<?php echo site_url() ?>news">最新消息</a>
         </li>
         <li>
-          <a href="category">產品資訊</a>
+          <a href="<?php echo site_url() ?>category">產品資訊</a>
         </li>
         <li>
-          <a href="directions">購物說明</a>
+          <a href="<?php echo site_url() ?>directions">購物說明</a>
         </li>
         <li>
-          <a href="orders">訂單查詢</a>
+          <a href="<?php echo site_url() ?>orders">訂單查詢</a>
         </li>
          <?php
             if(isset($this->fuel_auth))

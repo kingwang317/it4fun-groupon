@@ -232,7 +232,7 @@
 		$j("#addPlanButton").click(function() {
 			$j("#add_plan").text("新增");
 			$j("#add_plan").attr("url", "<?php echo $add_plan_url?>");
-			$j("textarea[name='plan_desc']").text("");
+			$j("textarea[name='plan_desc']").text("方案一");
 			$j("input[name='plan_price']").val("");
 			$j("input[name='plan_num']").val("");
 			$j("input[name='plan_seq']").val("");
@@ -524,7 +524,7 @@
 									foreach($pro_cate_results as $cate_row)
 									{
 								?>
-									<option value="<?php echo $cate_row->code_key?>" <?php if($cate_row->code_key==$row->pro_cate) echo "selected"?>><?php echo $cate_row->code_name?></option>
+									<option value="<?php echo $cate_row->id?>" <?php if($cate_row->id==$row->pro_cate) echo "selected"?>><?php echo $cate_row->code_name?></option>
 								<?php 
 									}
 								?>
@@ -571,7 +571,7 @@
 							</div>
 						</td>
 					</tr>
-					<tr>
+					<tr  style="display:none">
 						<td>產品團購價</td>
 						<td>
 							<div class="col-xs-5">
@@ -715,7 +715,7 @@
 							</textarea>
 						</td>
 					</tr>
-					<tr>
+					<tr style="display:none">
 						<td>產品規格</td>
 						<td>
 							<textarea name="pro_format" id="pro_format">
@@ -723,7 +723,7 @@
 							</textarea>
 						</td>
 					</tr>
-					<tr>
+					<tr style="display:none">
 						<td>產品運輸說明</td>
 						<td>
 							<textarea name="pro_ship_note" id="pro_ship_note">
@@ -740,7 +740,31 @@
 									foreach($pro_status_results as $status_row)
 									{
 								?>
-										<option value="<?php echo $status_row->code_key?>"><?php echo $status_row->code_name?></option>
+										<option value="<?php echo $status_row->code_key?>" <?php if ($status_row->code_key == $row->pro_status): ?>
+											selected
+										<?php endif ?>	><?php echo $status_row->code_name?></option>
+								<?php
+									}
+								?>
+							</select>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td>促銷狀態</td>
+						<td>
+							<div class="col-xs-3">
+							<select name="pro_promote" class="form-control input-sm">
+								<option value="" <?php if ( $row->pro_promote == ""): ?>
+									selected
+								<?php endif ?>>無</option>
+								<?php 
+									foreach($pro_promote_results as $promote_row)
+									{
+								?>
+										<option value="<?php echo $promote_row->code_key?>" <?php if ($promote_row->code_key == $row->pro_promote): ?>
+											selected
+										<?php endif ?>><?php echo $promote_row->code_name?></option>
 								<?php
 									}
 								?>
@@ -923,36 +947,36 @@
 </div>
 <div style='display:none'>
 	<div id="choosePlanArea">
-		<h1>新增方案</h1>
+		<h1>新增</h1>
 		<div class="row blockText" style="display:none; margin: 0 0 10px 10px; width:150px; height: 30px; background-color: rgba(0, 0, 0, .8); color:#fff; text-align:center; line-height: 28px;">
 			<span>新增成功</span>
 		</div>
 		<div class="row" style="margin: 0 0 0 10px">
 			<table class="table table-bordered">
-				<tr>
+				<tr style="display:none">
 					<td>方案描述</td>
 					<td>
 						<div class="col-xs-10">
-						<textarea name="plan_desc" id="paln_desc" class="form-control" rows="3"></textarea>
+						<textarea name="plan_desc" id="paln_desc" class="form-control" rows="3">方案一</textarea>
 						</div>
 					</td>
 				</tr>
 				<tr>
-					<td>方案價錢</td>
+					<td>價錢</td>
 					<td>
 						<div class="col-xs-3">
 							<input type="text" name="plan_price" class="form-control input-sm" value="">
 						</td>
 				</tr>
 				<tr>
-					<td>方案數量</td>
+					<td>數量</td>
 					<td>
 						<div class="col-xs-3">
 							<input type="text" name="plan_num" class="form-control input-sm" value="">
 						</div>
 					</td>
 				</tr>
-				<tr>
+				<tr style="display:none">
 					<td>方案順序</td>
 					<td>
 						<div class="col-xs-3">
