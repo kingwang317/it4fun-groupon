@@ -7,6 +7,8 @@ class Member_about extends CI_Controller {
 		$this->load->model('member_model');
 		$this->load->helper('url');
 		$this->load->helper('ajax');
+		// $this->load->library('pagination');
+		// $this->load->library('set_page');
 		$this->load->module_library(FUEL_FOLDER, 'fuel_auth');
 	}
 
@@ -88,6 +90,84 @@ class Member_about extends CI_Controller {
 
 		die();
 	}
+
+	function add()
+	{
+		$this->load->module_library(FUEL_FOLDER, 'fuel_auth');
+		$this->load->module_model(MEMBER_FOLDER, 'member_manage_model');
+		$this->load->module_model(PRODUCT_FOLDER, 'product_manage_model');
+		$this->load->module_model(ORDER_FOLDER, 'order_manage_model');
+
+		// $plan_id = $this->input->get_post("pro_plan");
+		$user_data = $this->fuel_auth->valid_user();
+		$member_id = 5;//isset($user_data['member_id'])?$user_data['member_id']:$user_data['user_name'];
+		$city_result = $this->product_manage_model->get_code('city', ' AND parent_id=-1 ORDER BY code_key ASC');
+		$ship_time_result = $this->product_manage_model->get_code('ship_time', ' AND parent_id=-1 ORDER BY code_key ASC');
+		
+		$member_result = $this->member_manage_model->get_member_detail_row($member_id);
+		// $this->order_manage_model->update_plan_tmp_num($plan_id);
+
+		$vars['get_payment_url'] = base_url()."payment/create";
+		$vars['city_result'] = $city_result;
+		$vars['ship_time_result'] = $ship_time_result;
+		// $vars['plan_id'] = $plan_id;
+		$vars['views'] = 'user';
+		$vars['pro_cate_1'] = base_url()."prod/pro_list/pro_cate_0001";
+		$vars['pro_cate_2'] = base_url()."prod/pro_list/pro_cate_0002";
+		$vars['member_result'] = isset($member_result)?$member_result:array();
+		$vars['is_logined'] = $this->fuel_auth->front_is_logined();
+		$page_init = array('location' => 'user');
+		$this->load->module_library(FUEL_FOLDER, 'fuel_page', $page_init);
+		$this->fuel_page->add_variables($vars);
+		$this->fuel_page->render(FALSE, FALSE); //第二個FALSE為在前台不顯示ADMIN BAR	
+
+		return;
+	}
+
+	function edit($dataStart=0)
+	{
+		$this->load->library('pagination');
+		$this->load->module_library(PRODUCT_FOLDER, 'my_page');
+		$this->load->module_model(ORDER_FOLDER, 'order_manage_model');
+		$this->load->module_model(MEMBER_FOLDER, 'member_manage_model');
+		$this->load->module_model(PRODUCT_FOLDER, 'product_manage_model');
+		// $user_data = $this->fuel_auth->valid_user();
+		$member_id = 5;//isset($user_data['member_id'])?$user_data['member_id']:"";
+
+		// if($member_id)
+		// {
+			
+		$member_result = $this->member_manage_model->get_member_detail_row($member_id);
+		$filter = " AND member_id=$member_id";
+		$target_url = base_url().'ordercheck';
+		$total_rows = $this->order_manage_model->get_total_rows($filter);
+		$config = $this->my_page->set_config($target_url, $total_rows, $dataStart, 20);
+		$dataLen = $dataStart + $config['per_page'];
+		$this->pagination->initialize($config);
+		$order_result = $this->order_manage_model->get_member_order($dataStart, $dataLen, $filter);
+		$city_result = $this->product_manage_model->get_code('city', ' AND parent_id=-1 ORDER BY code_key ASC');
+		$vars['is_logined'] = 1;
+		$vars['order_result'] = $order_result;
+		$vars['member_result'] = $member_result;
+		$vars['city_result'] = $city_result;
+		// }
+		// else
+		// {
+		// 	$vars['is_logined'] = -1;
+		// }
+		// $vars['login_url'] = base_url()."user/login";
+		$vars['update_url'] = base_url()."update_my_data/".$member_id;
+		// $vars['forgot_url'] = base_url()."forgot_pwd";
+		$vars['views'] = 'user_edit';
+		$vars['pro_cate_1'] = base_url()."prod/pro_list/pro_cate_0001";
+		$vars['pro_cate_2'] = base_url()."prod/pro_list/pro_cate_0002";
+		// $vars['pagination'] = $this->pagination->create_links();
+		$page_init = array('location' => 'user_edit');
+		$this->load->module_library(FUEL_FOLDER, 'fuel_page', $page_init);
+		$this->fuel_page->add_variables($vars);
+		$this->fuel_page->render(FALSE, FALSE); //第二個FALSE為在前台不顯示ADMIN BAR
+	}
+
 
 	function order_check($dataStart=0)
 	{
@@ -184,6 +264,16 @@ class Member_about extends CI_Controller {
 		}
 
 		die();
+	}
+
+	function forget_pass()
+	{	  
+		$vars['views'] = 'f_pass';   
+		$vars['forgot_url'] = base_url()."forgot_pwd";
+		$page_init = array('location' => 'f_pass');
+		$this->load->module_library(FUEL_FOLDER, 'fuel_page', $page_init);
+		$this->fuel_page->add_variables($vars);
+		$this->fuel_page->render(FALSE, FALSE); //第二個FALSE為在前台不顯示ADMIN BAR
 	}
 
 	function send_new_pwd()

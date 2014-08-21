@@ -1,177 +1,131 @@
 
-        <div id="navigation">
-          <div class="bar">
-            <a class='logo' href="<?php echo site_url();?>"></a>
-            <!--<div class="menu1"><a href="<?php echo $pro_cate_1?>" ></a></div>-->
-            <div class="menu2"><a href="<?php echo $pro_cate_2?>" ></a></div>
-          </div>
-        </div>
+<!--banner-->
+<div id="banner_title">
+<img src="<?php echo site_url() ?>templates/images/banner_title.jpg">
+</div>
 
-        <div id="buystep2">
-          <div class="txt"></div>
-          <div class="line"><div></div></div>
-        </div>        
-        <div id="buystep2_info">
-            <form>
-              <div class="content1">              
-                  <div class="photo">
-                    <img src="templates/images/photo1.jpg" >
-                  </div>
-                  <div class="form">
-                    <div class="str1">填寫訂購資料： </div>
-                    <div class="str2">
-                      請填寫您的訂購資料，以利我們作業喔！ <br>
-                      請放心，我們絕對不會以任何方式透漏您的任何個人資料，請您安心填寫。
-                    </div>
-                    <table>
-                      <tr>
-                        <td width="100" align="right">訂購人姓名：</td>
-                        <td><input type="text" value="<?php echo isset($member_result->member_name)? $member_result->member_name:''?>" id="order_name" name="order_name"></td>
-                      </tr>
-                      <tr>
-                        <td align="right"> 電子郵件：</td>
-                        <td><input type="text" value="<?php echo isset($member_result->member_account)? $member_result->member_account:''?>" id="order_email" name="order_email"></td>
-                      </tr>
-                      <?php
-                        if(!$is_logined)
-                        {
-                      ?>
-                      <tr>
-                        <td align="right">設定密碼：</td>
-                        <td><input type="password" id="pwd"></td>
-                      </tr>
-                      <tr>
-                        <td align="right">確認密碼：</td>
-                        <td><input type="password" id="chk_pwd"></td>
-                      </tr>
-                      <?php
-                        }
-                      ?>
-                      <tr>
-                        <td align="right">地址：</td>
-                        <td>
-                          <select name="order_city" id="order_city">
-                          <?php if(isset($member_result->member_city)):?>
-                          <?php
-                            if(isset($city_result))
-                            {
-                              foreach($city_result as $row)
-                              {
-                          ?>
-                            <option value="<?php echo $row->code_value1?>" <?php if($row->code_value1 == $member_result->member_city):?> SELECTED <?php endif;?>><?php echo $row->code_name?></option>
-                          <?php  
-                              }
-                            }
-                          ?>
-                        <?php else:?>
-                          <?php
-                            if(isset($city_result))
-                            {
-                              foreach($city_result as $row)
-                              {
-                          ?>
-                            <option value="<?php echo $row->code_value1?>"><?php echo $row->code_name?></option>
-                          <?php  
-                              }
-                            }
-                          ?>
-                        <?php endif;?>
-                          </select>
-                          <input type="text" value="<?php echo isset($member_result->member_account)? $member_result->member_addr:''?>" id="order_addr" name="order_addr" style="width:300px">
-                        </td>
-                      </tr>
-                      <tr>
-                        <td align="right">手機：</td>
-                        <td><input type="type" value="<?php echo isset($member_result->member_mobile)? $member_result->member_mobile:''?>" id="order_mobile" name="order_mobile" onkeypress='validate(event)'></td>
-                      </tr>
-                      <tr>
-                        <td align="right">統一編號：</td>
-                        <td><input type="text" value="<?php echo isset($member_result->vat_number)? $member_result->vat_number:''?>" id="vat_number" name="vat_number"></td>
-                      </tr>
-                      <tr>
-                        <td align="right">發票抬頭：</td>
-                        <td><input type="text" value="<?php echo isset($member_result->invoice_title)? $member_result->invoice_title:''?>" id="invoice_title" name="invoice_title"></td>
-                      </tr>
-                      <tr>
-                        <td align="right">電子發票說明：</td>
-                        <td>
-                          依財稅XX營業字第XXXXXXXXXX號函准使用電子發票
-                        </td>
-                      </tr>
-                    </table>
-                  </div>
-                
-              </div>
-              <div class="content2">
-                <div class="str1">收件人資料：</div>
-                <div class="str2"><input type="checkbox" id="sameorder" value="1">與訂購人相同</div>
-                <table>
-                  <tr>
-                    <td align="right">收件人姓名：</td>
-                    <td><input type="text" name="" id="order_addressee_name" name="order_addressee_name"></td>
-                  </tr>
-                  <tr>
-                    <td align="right">地址：</td>
-                    <td>
-                      <select name="order_addressee_city" id="order_addressee_city">
-                          <?php
-                            if(isset($city_result))
-                            {
-                              foreach($city_result as $row)
-                              {
-                          ?>
-                            <option value="<?php echo $row->code_value1?>"><?php echo $row->code_name?></option>
-                          <?php  
-                              }
-                            }
-                          ?>
-                      </select>
-                      <input type="text" id="order_addressee_addr" name="order_addressee_addr" style="width:300px">
-                    </td>
-                  </tr>
-                  <tr>
-                    <td align="right">送達時間：</td>
-                    <td>
-                      <select name="order_ship_time" id="order_ship_time">
-                        <?php
-                          if(isset($ship_time_result))
-                          {
-                            foreach($ship_time_result as $row)
-                            {
-                        ?>
-                              <option value="<?php echo $row->code_value1?>"><?php echo $row->code_name?></option>
-                        <?php
-                            }
-                          }
-                        ?>
-                      </select>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td align="right">手機：</td>
-                    <td><input type="text" id="order_addressee_mobile" name="order_addressee_mobile" onkeypress='validate(event)'></td>
-                  </tr>
-                </table>
-              </div>
-              <input type="hidden" value="<?php echo $plan_id?>" name="plan_id" id="plan_id">
-              <a class="step1btn1" id="send_payment"></a>  
-            </form>
-            <form id="payment_form" style="display:none" action="" method="POST">
-              <input type="hidden" value="" name="MerchantID" id="MerchantID">
-              <input type="hidden" value="CREDIT" name="PaymentType" id="PaymentType">
-              <input type="hidden" value="" name="XMLData" id="XMLData">
-            </form>     
-        </div>  
-        <br class="clear"> 
+<div id="user">
+<table width="620" border="0" align="center" cellpadding="0" cellspacing="0">
+  <tr>
+    <th width="146" scope="col"><img src="<?php echo site_url() ?>templates/images/user_1.png"></th>
+    <th colspan="2" scope="col"><h3>填寫訂購資料</h3><p>請填寫您的訂購資料，以利我們作業喔！</p>
+  <p>請放心，我們絕對不會以任何方式透漏您的任何個人資料，請您安心填寫。</p></th>
+    </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td width="142" align="right">訂購人姓名：</td>
+    <td width="326"><input type="text" class="form-control" value="<?php echo isset($member_result->member_name)? $member_result->member_name:''?>" id="order_name" name="order_name" ></td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td align="right">電子郵件：</td>
+    <td><input type="text" class="form-control" value="<?php echo isset($member_result->member_account)? $member_result->member_account:''?>" id="order_email" name="order_email" ></td>
+  </tr>
+  <?php if (!$is_logined): ?>
+  <tr>
+    <td>&nbsp;</td>
+    <td align="right">設定密碼：</td>
+    <td><input type="password" class="form-control" id="pwd" ></td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td align="right">確認密碼：</td>
+    <td><input type="password" class="form-control" id="chk_pwd" ></td>
+  </tr>  
+  <?php endif ?>
+  
+ <!--  <tr>
+    <td>&nbsp;</td>
+    <td align="right">地址：</td>
+    <td><input type="text" class="form-control"  ></td>
+  </tr> -->
+  <tr>
+      <td>&nbsp;</td>
+      <td align="right">地址：</td>
+      <td>
+        <select name="order_city" id="order_city">
+        <?php if(isset($member_result->member_city)):?>
+        <?php
+          if(isset($city_result))
+          {
+            foreach($city_result as $row)
+            {
+        ?>
+          <option value="<?php echo $row->code_value1?>" <?php if($row->code_value1 == $member_result->member_city):?> SELECTED <?php endif;?>><?php echo $row->code_name?></option>
+        <?php  
+            }
+          }
+        ?>
+      <?php else:?>
+        <?php
+          if(isset($city_result))
+          {
+            foreach($city_result as $row)
+            {
+        ?>
+          <option value="<?php echo $row->code_value1?>"><?php echo $row->code_name?></option>
+        <?php  
+            }
+          }
+        ?>
+      <?php endif;?>
+        </select>
+        <input type="text" class="form-control" value="<?php echo isset($member_result->member_account)? $member_result->member_addr:''?>" id="order_addr" name="order_addr" >
+      </td>
+    </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td align="right">手機：</td>
+    <td><input type="text" class="form-control" value="<?php echo isset($member_result->member_mobile)? $member_result->member_mobile:''?>" id="order_mobile" name="order_mobile" onkeypress='validate(event)' ></td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td align="right">統一編號：</td>
+    <td><input type="text" class="form-control" value="<?php echo isset($member_result->vat_number)? $member_result->vat_number:''?>" id="vat_number" name="vat_number" ></td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td align="right">發票抬頭：</td>
+    <td><input type="text" class="form-control" value="<?php echo isset($member_result->invoice_title)? $member_result->invoice_title:''?>" id="invoice_title" name="invoice_title" ></td>
+  </tr>
+  <tr>
+    <td><img src="<?php echo site_url() ?>templates/images/user_2.png"></td>
+    <td colspan="2"><h3>收件人資料：</h3><p>
+      <input type="checkbox" name="checkbox" id="sameorder" value="1" />
+      與訂購人相同</td>
+    </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td align="right">訂購人姓名：</td>
+    <td><input type="text" class="form-control" name="order_addressee_name" id="order_addressee_name" ></td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td align="right">地址：</td>
+    <td><input type="text" class="form-control" name="order_addressee_addr" id="order_addressee_addr"  ></td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td align="right">手機：</td>
+    <td><input type="text" class="form-control" name="order_addressee_mobile" id="order_addressee_mobile"  ></td>
+  </tr>
+  <tr>
+    <td colspan="3" align="center">
+      <img id='send_payment' src="<?php echo site_url() ?>templates/images/checkitout.png" style="margin-top:10px;"></td>
+    </tr>
+</table>
+</div>
+
 <script>
   $(document).ready(function($) {
-    $("#sameorder").click(function(){
+    $("#sameorder").click(function(){ 
       if($("#sameorder:checked").val() == 1)
       {
+        // console.log($("#order_name").val());
         $("#order_addressee_name").val($("#order_name").val());
         $("#order_addressee_addr").val($("#order_addr").val());
         $("#order_addressee_mobile").val($("#order_mobile").val());
-        $("#order_addressee_city").val($("#order_city").val());       
+        // $("#order_addressee_city").val($("#order_city").val());       
       }
       else
       {
@@ -194,7 +148,7 @@
           }
           else
           {
-            var postData = {"plan_id": $("#plan_id").val(),
+            var postData = {//"plan_id": $("#plan_id").val(),
                             "order_name": $("#order_name").val(),
                             "order_email": $("#order_email").val(),
                             "pwd": pwd,
@@ -214,7 +168,7 @@
         }
         else
         {
-          var postData = {"plan_id": $("#plan_id").val(),
+          var postData = {//"plan_id": $("#plan_id").val(),
                           "order_name": $("#order_name").val(),
                           "order_email": $("#order_email").val(),
                           "order_mobile": $("#order_mobile").val(),
@@ -263,12 +217,15 @@
           data: postData,
           success: function(data)
           {
+            console.log(data);
             if(data.status == 1)
             {
-              $("#MerchantID").val(data.merchant_id);
-              $("#XMLData").val(data.encode_data);
-              $("#payment_form").attr('action', data.gateway);
-              $("#payment_form").submit();
+              // $("#MerchantID").val(data.merchant_id);
+              // $("#XMLData").val(data.encode_data);
+              // $("#payment_form").attr('action', data.gateway);
+              // $("#payment_form").submit();
+              alert('訂單已建立完成！！');
+              location.href = '<?php echo site_url() ?>orders';
             }
             else
             {
@@ -291,15 +248,15 @@
     }
   }
 
-function ValidEmail(emailtoCheck)
-{
-  // 規則: 1.只有一個 "@"
-  //       2.網址中, 至少要有一個".", 且不能連續出現
-  //       3.不能有空白
-  var regExp = /^[^@^\s]+@[^\.@^\s]+(\.[^\.@^\s]+)+$/;
-  if ( emailtoCheck.match(regExp) )
-    return true;
-  else
-    return false;
-}
-</script>    
+  function ValidEmail(emailtoCheck)
+  {
+    // 規則: 1.只有一個 "@"
+    //       2.網址中, 至少要有一個".", 且不能連續出現
+    //       3.不能有空白
+    var regExp = /^[^@^\s]+@[^\.@^\s]+(\.[^\.@^\s]+)+$/;
+    if ( emailtoCheck.match(regExp) )
+      return true;
+    else
+      return false;
+  }
+</script>

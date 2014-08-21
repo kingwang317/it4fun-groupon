@@ -108,7 +108,7 @@ if (isset($pro_plan_results)) {
      $('#img_cart').on("click", function (e) {
         var num = $('#num').val();
         if (num > 0) {
-            var url = '<?php echo site_url()."addToCart/$pro_detail_results->pro_id/"; ?>' + num;
+            var url = '<?php echo site_url()."addToCart/$pro_detail_results->pro_id/$pro_detail_results->plan_id/"; ?>' + num;
             $.get(url, function(data) {
               /*optional stuff to do after success */
               alert('商品已加入購物車！');

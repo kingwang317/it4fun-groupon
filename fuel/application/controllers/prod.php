@@ -31,17 +31,17 @@ class Prod extends CI_Controller {
 		}   
 	}
 
-	function do_set_cart_info($pro_id,$num)
+	function do_set_cart_info($pro_id,$plan_id,$num)
 	{ 
 		$cart = get_cookie("cart",TRUE);
 
 		if (isset($cart) && !empty($cart)) { 
 			$cart = stripslashes($cart);
 			$cart = json_decode($cart, true); 
-		    $cart[$pro_id] = array('pro_id' => $pro_id ,'num' => $cart[$pro_id]['num'] + $num); 
+		    $cart[$pro_id] = array('pro_id' => $pro_id ,'plan_id' => $plan_id ,'num' => $cart[$pro_id]['num'] + $num); 
 		    // $cart = $cart + $num;
 		}else{
-			$cart[$pro_id] = array('pro_id' => $pro_id ,'num' => $num);
+			$cart[$pro_id] = array('pro_id' => $pro_id ,'plan_id' => $plan_id ,'num' => $num);
 			// $cart = $num; 
 		}   
 		$json = json_encode($cart);
@@ -58,15 +58,15 @@ class Prod extends CI_Controller {
 
 	function cart(){
 		$cart = get_cookie("cart",TRUE);
-
+		$pro_cart = null;
 		if (isset($cart) && !empty($cart)) { 
 			$cart = stripslashes($cart);
 			$cart = json_decode($cart, true); 
-		}
-		$pro_ids = array_keys($cart);
-		$pro_ids = implode(",", $pro_ids);
-
-		$pro_cart = $this->product_model->get_cart_pro_list($pro_ids);
+			$pro_ids = array_keys($cart);
+			$pro_ids = implode(",", $pro_ids);
+			$pro_cart = $this->product_model->get_cart_pro_list($pro_ids);
+		} 
+	 
 
 		// print_r($cart);
 		// die;

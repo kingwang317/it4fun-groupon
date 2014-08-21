@@ -94,16 +94,13 @@
 							</select>
 						</td>
 					</tr>-->
-					<tr>
+				<!-- 	<tr>
 						<td>商品</td>
 						<td>
-							<!--<select>
-								<option value="">請選擇...</option>
-							</select>-->
 							<?php echo $order_results->pro_name;?>
 						</td>
-					</tr>
-					<tr>
+					</tr> -->
+					<!-- <tr>
 						<td>商品方案</td>
 						<td>
 							<div class="col-xs-5">
@@ -120,7 +117,7 @@
 							</select>
 							</div>
 						</td>
-					</tr>
+					</tr> -->
 					<tr>
 						<td>訂購人姓名</td>
 						<td>
@@ -169,7 +166,7 @@
 							</div>
 						</td>
 					</tr>
-					<tr>
+					<!-- <tr>
 						<td>狀態</td>
 						<td>
 							<?php if($order_results->RtnCode == 1):?>
@@ -178,7 +175,7 @@
 								錯誤碼：<span style="color:red"><?php echo $order_results->RtnCode?></span>
 							<?php endif;?>
 						</td>
-					</tr>
+					</tr> -->
 					<tr>
 						<td>訂單確認</td>
 						<td>
@@ -230,7 +227,7 @@
 							</div>
 						</td>
 					</tr>
-					<tr>
+					<!-- <tr style="display:none;" >
 						<td>送達時間</td>
 						<td>
 							<div class="col-xs-3">
@@ -246,7 +243,7 @@
 							</select>
 							</div>
 						</td>
-					</tr>
+					</tr> -->
 					<tr>
 						<td>訂單備註</td>
 						<td>
@@ -296,5 +293,32 @@
 		}
 ?>
 		</form>
+	</div>
+</div>
+
+<div class="row" style="margin:10px 10px">
+	<div class="col-md-12">
+		<?php if (isset($order_dt_results)): ?> 
+			<table class="table table-bordered">
+				<thead>
+					<tr>
+						<td>商品名稱</td>
+						<td>數量</td>
+						<td>單價</td>
+						<td>小計</td>
+					</tr>
+				</thead>
+				<tbody>
+					<?php foreach ($order_dt_results as $row): ?>
+					<tr>
+						<td><?php echo $row->pro_name ?></td>
+						<td><?php echo $row->num ?></td>
+						<td><?php echo $row->amount ?></td>
+						<td><?php echo $row->num * $row->amount ?></td>
+					</tr>
+					<?php endforeach ?>
+				</tbody>
+			</table>
+		<?php endif ?>
 	</div>
 </div>

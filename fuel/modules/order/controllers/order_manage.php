@@ -138,8 +138,11 @@ class Order_manage extends Fuel_base_controller {
 		$view_name = "修改訂單";
 		$base_url = base_url();
 
-		$order_results = $this->order_manage_model->get_order_detail($order_id);
-		$plan_results = $this->order_manage_model->get_plan_by_prod($order_results->pro_id);
+		$order_results = $this->order_manage_model->get_order_info($order_id);
+		$order_dt_results = $this->order_manage_model->get_order_detail($order_id);
+		// print_r($order_dt_results);
+		// die;
+		// $plan_results = $this->order_manage_model->get_plan_by_prod($order_results->pro_id);
 		$order_status_results = $this->order_manage_model->get_code('order_status', ' AND parent_id=-1 ORDER BY code_key ASC');
 		$ship_status_results = $this->order_manage_model->get_code('ship_status', ' AND parent_id=-1 ORDER BY code_key ASC');
 		$ship_time_results = $this->order_manage_model->get_code('ship_time', ' AND parent_id=-1 ORDER BY code_key ASC');
@@ -153,7 +156,8 @@ class Order_manage extends Fuel_base_controller {
 		$vars['inv_status_results'] = $inv_status_results;
 		$vars['ship_time_results'] = $ship_time_results;
 		$vars['order_results'] = $order_results;
-		$vars['plan_results'] = $plan_results;
+		$vars['order_dt_results'] = $order_dt_results;
+		// $vars['plan_results'] = $plan_results;
 		$vars['back_url'] = $base_url."fuel/order/lists";
 		$vars['submit_url'] = $base_url."fuel/order/do_edit/".$order_id;
 		$vars['CI'] = & get_instance();

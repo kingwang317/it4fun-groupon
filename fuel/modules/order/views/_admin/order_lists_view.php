@@ -362,7 +362,7 @@
 	  </div>
 	</div>
 	<div class="row" style="margin:10px 10px">
-		<table class="table table-bordered" style="margin-bottom:5px">
+		<!-- <table class="table table-bordered" style="margin-bottom:5px">
 			<tbody>
 				<tr>
 					<th class="col-xs-2">商品類別</th>
@@ -396,7 +396,7 @@
 					</td>
 				</tr>
 			<tbody>
-		</table>
+		</table>-->
 
 		<table class="table table-bordered" style="margin-bottom:5px">
 			<tbody>
@@ -457,9 +457,9 @@
 						</div>
 					</td>
 					<td>訂單編號</td>
-					<td>訂購商品</td>
-					<td>訂購方案</td>
-					<td>狀態</td> 
+					<!-- <td>訂購商品</td>
+					<td>訂購方案</td> -->
+					<!-- <td>狀態</td>  -->
 					<td>訂購人</td>						
 					<td>訂單確認</td>
 					<td>出貨狀態</td>
@@ -483,15 +483,15 @@
 						</label>
 					</td>
 					<td><button class="btn btn-link btn-xs" type="button" onclick="aHover('<?php echo $edit_url.$rows->order_id?>')"><?php echo $rows->order_id?></button></td>
-					<td><?php echo $rows->pro_name?></td>
-					<td><?php echo $rows->plan_desc?></td>
-					<td>
+					<!-- <td><?php echo $rows->pro_name?></td> -->
+					<!-- <td><?php echo $rows->plan_desc?></td> -->
+					<!-- <td>
 						<?php if($rows->RtnCode == 1):?>
 							<span style="color:blue">成功</span>
 						<?php else:?>
 							<span style="color:red">失敗</span>
 						<?php endif;?>
-					</td>
+					</td> -->
 					<td><?php echo $rows->order_name?></td>
 					<td>
 						<?php
@@ -541,7 +541,7 @@
 				{
 				?>
 					<tr>
-						<td colspan="9">No results.</td>
+						<td colspan="7">No results.</td>
 					</tr>
 				<?php
 				}

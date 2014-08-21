@@ -6,6 +6,7 @@ class Payment extends CI_Controller {
 		parent::__construct();
 		$this->load->helper('url');
 		$this->load->helper('ajax');
+		$this->load->helper('cookie');
 	}
 
 	function payment_form()
@@ -15,34 +16,28 @@ class Payment extends CI_Controller {
 		$this->load->module_model(PRODUCT_FOLDER, 'product_manage_model');
 		$this->load->module_model(ORDER_FOLDER, 'order_manage_model');
 
-		$plan_id = $this->input->get_post("pro_plan");
+		// $plan_id = $this->input->get_post("pro_plan");
 		$user_data = $this->fuel_auth->valid_user();
-		$member_id = isset($user_data['member_id'])?$user_data['member_id']:$user_data['user_name'];
+		$member_id = 5;//isset($user_data['member_id'])?$user_data['member_id']:$user_data['user_name'];
 		$city_result = $this->product_manage_model->get_code('city', ' AND parent_id=-1 ORDER BY code_key ASC');
 		$ship_time_result = $this->product_manage_model->get_code('ship_time', ' AND parent_id=-1 ORDER BY code_key ASC');
-		if($plan_id)
-		{
-			$member_result = $this->member_manage_model->get_member_detail_row($member_id);
-			$this->order_manage_model->update_plan_tmp_num($plan_id);
+		
+		$member_result = $this->member_manage_model->get_member_detail_row($member_id);
+		// $this->order_manage_model->update_plan_tmp_num($plan_id);
 
-			$vars['get_payment_url'] = base_url()."payment/create";
-			$vars['city_result'] = $city_result;
-			$vars['ship_time_result'] = $ship_time_result;
-			$vars['plan_id'] = $plan_id;
-			$vars['views'] = 'paymentinfo';
-			$vars['pro_cate_1'] = base_url()."prod/pro_list/pro_cate_0001";
-			$vars['pro_cate_2'] = base_url()."prod/pro_list/pro_cate_0002";
-			$vars['member_result'] = isset($member_result)?$member_result:array();
-			$vars['is_logined'] = $this->fuel_auth->front_is_logined();
-			$page_init = array('location' => 'paymentinfo');
-			$this->load->module_library(FUEL_FOLDER, 'fuel_page', $page_init);
-			$this->fuel_page->add_variables($vars);
-			$this->fuel_page->render(FALSE, FALSE); //第二個FALSE為在前台不顯示ADMIN BAR				
-		}
-		else
-		{
-			redirect(site_url(), 'refresh');
-		}
+		$vars['get_payment_url'] = base_url()."payment/create";
+		$vars['city_result'] = $city_result;
+		$vars['ship_time_result'] = $ship_time_result;
+		// $vars['plan_id'] = $plan_id;
+		$vars['views'] = 'paymentinfo';
+		$vars['pro_cate_1'] = base_url()."prod/pro_list/pro_cate_0001";
+		$vars['pro_cate_2'] = base_url()."prod/pro_list/pro_cate_0002";
+		$vars['member_result'] = isset($member_result)?$member_result:array();
+		$vars['is_logined'] = $this->fuel_auth->front_is_logined();
+		$page_init = array('location' => 'paymentinfo');
+		$this->load->module_library(FUEL_FOLDER, 'fuel_page', $page_init);
+		$this->fuel_page->add_variables($vars);
+		$this->fuel_page->render(FALSE, FALSE); //第二個FALSE為在前台不顯示ADMIN BAR	
 
 		return;
 	}
@@ -124,14 +119,15 @@ class Payment extends CI_Controller {
 		$this->load->module_model(PRODUCT_FOLDER, 'product_manage_model');
 		$this->load->module_model(MEMBER_FOLDER, 'member_manage_model');
 
-		if(is_ajax())
+		//if(is_ajax())
+		if(true)
 		{
 
 			$key = ALLPAY_KEY;
 			$iv = ALLPAY_IV;
 			$user_data = $this->fuel_auth->valid_user();
 
-			$plan_id 				= $this->input->get_post("plan_id");
+			$plan_id 				= -1;//$this->input->get_post("plan_id");
 			$order_name 			= $this->input->get_post("order_name");
 			$order_email 			= $this->input->get_post("order_email");
 			$pwd 					= $this->input->get_post("pwd");
@@ -147,15 +143,38 @@ class Payment extends CI_Controller {
 			$order_addressee_mobile = $this->input->get_post("order_addressee_mobile");
 			$order_ship_time		= $this->input->get_post("order_ship_time");
 
-			$member_id = isset($user_data['member_id'])?$user_data['member_id']:"";
-			$product_plan = $this->product_manage_model->get_product_plan($plan_id);
+			$member_id = 5;//isset($user_data['member_id'])?$user_data['member_id']:"";
+			 
+			$product_plan = new stdClass;
+			$product_plan->plan_id = -1;
+			$product_plan->pro_id = -1;
+			$product_plan->plan_price = '';
+
+			//order detail
 
 			$order_addressee_addr = $order_addressee_city.$order_addressee_addr;
 			if($member_id)
 			{
 				$member_result = $this->member_manage_model->get_member_detail_row($member_id);
-				//交易單號		
+				//交易單號 == order_id	
 				$trade_no = $this->order_manage_model->create_empty_order($member_id, $order_email, $order_name, $order_mobile, $order_city, $order_addr, $vat_number, $invoice_title, $order_addressee_name, $order_addressee_addr, $order_addressee_mobile, $product_plan, $order_ship_time);
+				$cart = get_cookie("cart",TRUE);
+				if (isset($cart) && !empty($cart)) { 
+					$cart = stripslashes($cart);
+					$cart = json_decode($cart, true); 
+				    foreach ($cart as $row) {
+				   	// print_r($row['plan_id']);
+				    	$product_plan = $this->product_manage_model->get_product_plan($row['plan_id']);
+				    	$this->order_manage_model->add_order_dt($trade_no,$row['plan_id'],$row['num'],$product_plan->plan_price);
+				    }
+				    //remove cookie				    
+				    $this->load->helper('cookie'); 
+					$config = array(
+						'name' => 'cart',
+						'path' => WEB_PATH
+					);
+					delete_cookie($config);
+				} 
 				$result['status'] = 1;
 			}
 			else
@@ -175,7 +194,25 @@ class Payment extends CI_Controller {
 							'path' => WEB_PATH
 						);
 						set_cookie($config);
+						//$trade_no = $this->order_manage_model->create_empty_order($member_id, $order_email, $order_name, $order_mobile, $order_city, $order_addr, $vat_number, $invoice_title, $order_addressee_name, $order_addressee_addr, $order_addressee_mobile, $product_plan, $order_ship_time);
+
 						$trade_no = $this->order_manage_model->create_empty_order($member_id, $order_email, $order_name, $order_mobile, $order_city, $order_addr, $vat_number, $invoice_title, $order_addressee_name, $order_addressee_addr, $order_addressee_mobile, $product_plan, $order_ship_time);
+						$cart = get_cookie("cart",TRUE);
+						if (isset($cart) && !empty($cart)) { 
+							$cart = stripslashes($cart);
+							$cart = json_decode($cart, true); 
+						    foreach ($cart as $row) { 
+						    	$product_plan = $this->product_manage_model->get_product_plan($row['plan_id']);
+						    	$this->order_manage_model->add_order_dt($trade_no,$row['plan_id'],$row['num'],$product_plan->plan_price);
+						    }		
+						    //remove cookie				    
+						    $this->load->helper('cookie'); 
+							$config = array(
+								'name' => 'cart',
+								'path' => WEB_PATH
+							);
+							delete_cookie($config);
+						} 
 					}
 
 					$result['status'] = 1;
@@ -188,62 +225,62 @@ class Payment extends CI_Controller {
 			}
 
 
-			//參數設定
-			//ALLPAY店號
-			$merchant_id = MERCHANT_ID;
+			// //參數設定
+			// //ALLPAY店號
+			// $merchant_id = MERCHANT_ID;
 
-			//交易日期
-			$trade_date = date("Y/m/d H:i:s");
-			//交易金額
-			$trade_amt = (int)$product_plan->plan_price; 
-			//交易說明
-			$trade_desc = $product_plan->pro_name;
-			//卡號
-			$card_no = "0";//$this->input->get_post("card_no"); 
-			 //卡片有效月
-			$card_mm = "0";//$this->input->get_post("card_mm");
-			//卡片有效年
-			$card_yy = "0";//$this->input->get_post("card_yy");
-			//卡號檢核碼
-			$card_CVV2 = "0";//$this->input->get_post("card_CVV2");
-			//編碼設訂
-			$charset = "utf-8"; 
-			//回傳網址
-			$return_url = urlencode("http://taste-it.com.tw/payment/callback"); 
-			//告知授權與否網址
-			$rerver_reply_url = "";//urlencode("http://www.taste-it.com.tw/payment/callback"); 
-			//導回商家網址
-			$client_back_url = "";//urlencode("http://www.taste-it.com.tw/payment/callback"); 
-			//傳送資料網址
-			$gateway="http://pay-stage.allpay.com.tw/payment/gateway";
+			// //交易日期
+			// $trade_date = date("Y/m/d H:i:s");
+			// //交易金額
+			// $trade_amt = (int)$product_plan->plan_price; 
+			// //交易說明
+			// $trade_desc = $product_plan->pro_name;
+			// //卡號
+			// $card_no = "0";//$this->input->get_post("card_no"); 
+			//  //卡片有效月
+			// $card_mm = "0";//$this->input->get_post("card_mm");
+			// //卡片有效年
+			// $card_yy = "0";//$this->input->get_post("card_yy");
+			// //卡號檢核碼
+			// $card_CVV2 = "0";//$this->input->get_post("card_CVV2");
+			// //編碼設訂
+			// $charset = "utf-8"; 
+			// //回傳網址
+			// $return_url = urlencode("http://taste-it.com.tw/payment/callback"); 
+			// //告知授權與否網址
+			// $rerver_reply_url = "";//urlencode("http://www.taste-it.com.tw/payment/callback"); 
+			// //導回商家網址
+			// $client_back_url = "";//urlencode("http://www.taste-it.com.tw/payment/callback"); 
+			// //傳送資料網址
+			// $gateway="http://pay-stage.allpay.com.tw/payment/gateway";
 
-			$base_xml = $this->get_base_xml();
+			// $base_xml = $this->get_base_xml();
 
-			$base_xml = str_replace("[++merchant_id++]", $merchant_id, $base_xml);
-			$base_xml = str_replace("[++merchant_trade_no++]", $trade_no, $base_xml);
-			$base_xml = str_replace("[++trade_date++]", $trade_date, $base_xml);
-			$base_xml = str_replace("[++trade_amt++]", $trade_amt, $base_xml);
-			$base_xml = str_replace("[++trade_desc++]", $trade_desc, $base_xml);
-			$base_xml = str_replace("[++card_no++]", $card_no, $base_xml);
-			$base_xml = str_replace("[++card_mm++]", $card_mm , $base_xml);
-			$base_xml = str_replace("[++card_yy++]", $card_yy , $base_xml);
-			$base_xml = str_replace("[++card_CVV2++]", $card_CVV2 , $base_xml);
-			$base_xml = str_replace("[++charset++]", $charset , $base_xml);
-			$base_xml = str_replace("[++return_url++]", $return_url, $base_xml);
-			$base_xml = str_replace("[++srerver_reply_url++]", $rerver_reply_url, $base_xml);
-			$base_xml = str_replace("[++client_back_url++]", $client_back_url, $base_xml);
-			//header('Content-Type: text/xml');
-			//print_r($base_xml);
-			//exit;
-			//xml 加密
+			// $base_xml = str_replace("[++merchant_id++]", $merchant_id, $base_xml);
+			// $base_xml = str_replace("[++merchant_trade_no++]", $trade_no, $base_xml);
+			// $base_xml = str_replace("[++trade_date++]", $trade_date, $base_xml);
+			// $base_xml = str_replace("[++trade_amt++]", $trade_amt, $base_xml);
+			// $base_xml = str_replace("[++trade_desc++]", $trade_desc, $base_xml);
+			// $base_xml = str_replace("[++card_no++]", $card_no, $base_xml);
+			// $base_xml = str_replace("[++card_mm++]", $card_mm , $base_xml);
+			// $base_xml = str_replace("[++card_yy++]", $card_yy , $base_xml);
+			// $base_xml = str_replace("[++card_CVV2++]", $card_CVV2 , $base_xml);
+			// $base_xml = str_replace("[++charset++]", $charset , $base_xml);
+			// $base_xml = str_replace("[++return_url++]", $return_url, $base_xml);
+			// $base_xml = str_replace("[++srerver_reply_url++]", $rerver_reply_url, $base_xml);
+			// $base_xml = str_replace("[++client_back_url++]", $client_back_url, $base_xml);
+			// //header('Content-Type: text/xml');
+			// //print_r($base_xml);
+			// //exit;
+			// //xml 加密
 
-			$encode_data = $this->encrypt($base_xml, $iv, $key);
+			// $encode_data = $this->encrypt($base_xml, $iv, $key);
 
 			
-			$result['encode_data'] = $encode_data;
-			$result['merchant_id'] = $merchant_id;
-			$result['gateway'] = $gateway;
-			$result['base_xml'] = $base_xml;
+			// $result['encode_data'] = $encode_data;
+			// $result['merchant_id'] = $merchant_id;
+			// $result['gateway'] = $gateway;
+			// $result['base_xml'] = $base_xml;
 
 			echo json_encode($result);
 		}
@@ -254,7 +291,7 @@ class Payment extends CI_Controller {
 
 		die();
 
-	}
+	} 
 
 	function test()
 	{

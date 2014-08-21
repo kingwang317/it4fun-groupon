@@ -32,12 +32,13 @@ class Order_manage_model extends MY_Model {
 	{
 		$sql = @"SELECT mo.order_id, mo.product_plan, mo.order_name, mo.order_email, mo.order_mobile, mo.order_addr, mo.order_vat_number, mo.order_invoice_title, mo.RtnCode, 
 						mo.order_status, mo.order_ship_status, mo.order_inv_status, mo.order_addressee_name, mo.order_addressee_addr,
-						mo.order_addressee_mobile, mo.order_time, mo.order_price, mpr.pro_name, mpr.pro_id, mpl.plan_desc, mpl.plan_id, mpl.plan_price
-				 FROM mod_order mo, mod_product mpr, mod_plan mpl 
-				 WHERE mo.product_id=mpr.pro_id AND mo.product_plan=mpl.plan_id".$filter.
+						mo.order_addressee_mobile, mo.order_time, mo.order_price
+				 FROM mod_order mo
+				 WHERE 1=1 ".$filter.
 				 " ORDER BY mo.modi_time DESC LIMIT $dataStart, $dataLen";
 		$query = $this->db->query($sql);
-
+		// print_r($sql);
+		// die;
 		if($query->num_rows() > 0)
 		{
 			$result = $query->result();
@@ -61,12 +62,12 @@ class Order_manage_model extends MY_Model {
 		return $query;
 	}
 
-	public function get_order_detail($order_id)
+	public function get_order_info($order_id)
 	{
 		$sql = @"SELECT mo.order_id, mo.product_plan, mo.order_name, mo.order_email, mo.order_mobile, mo.order_addr, mo.order_vat_number, mo.order_invoice_title, mo.RtnCode, 
 						mo.order_status, mo.order_ship_status, mo.order_inv_status, mo.order_addressee_name, mo.order_addressee_addr, mo.order_ship_time,
-						mo.order_addressee_mobile, mo.order_note, mo.order_time, mo.order_price, mpr.pro_name, mpr.pro_id, mpl.plan_desc, mpl.plan_id
-				 FROM mod_order mo, mod_product mpr, mod_plan mpl WHERE mo.product_id=mpr.pro_id AND mo.product_plan=mpl.plan_id AND order_id=?";
+						mo.order_addressee_mobile, mo.order_note, mo.order_time, mo.order_price
+				 FROM mod_order mo WHERE order_id=?";
 		$para = array($order_id);
 		$query = $this->db->query($sql, $para);
 
@@ -75,6 +76,26 @@ class Order_manage_model extends MY_Model {
 			$row = $query->row();
 
 			return $row;
+		}
+
+		return;
+	}
+
+	public function get_order_detail($order_id)
+	{
+		$sql = @"SELECT c.pro_name,a.num,a.amount
+				 FROM mod_order_detail a 
+				 INNER JOIN mod_plan b ON a.plan_id = b.plan_id
+				 INNER JOIN mod_product c ON b.pro_id = c.pro_id
+				 WHERE a.order_id=?";
+		$para = array($order_id);
+		$query = $this->db->query($sql, $para);
+
+		if($query->num_rows() > 0)
+		{
+			$result = $query->result();
+
+			return $result;
 		}
 
 		return;
@@ -135,12 +156,35 @@ class Order_manage_model extends MY_Model {
 					);
 		$success = $this->db->query($sql, $para);
 
+		// $sql = "SELECT last_insert_id() as ID";
+  //       $id_result= $this->db->query($sql);
+  //       $order_id = $id_result->row()->ID; 
+
 		if($success)
 		{
 			return $order_id;
 		}
 
 		return;	
+	}
+
+	public function add_order_dt($order_id, $plan_id, $num, $amount)
+	{
+		$sql = @"INSERT INTO mod_order_detail (order_id,
+										plan_id,
+										num,
+										amount
+										) 
+							VALUES (?, ?, ?, ?)";
+		$para = array(
+						$order_id,
+						$plan_id,
+						$num,
+						$amount
+					);
+		$success = $this->db->query($sql, $para);
+        
+		return $success;
 	}
 
 	public function do_add_order($order_name, $order_email, $order_mobile, $order_addr, $order_vat_num, $order_inv_title, $oa_name, $oa_mobile, $oa_addr, $pro_id, $pro_plan)

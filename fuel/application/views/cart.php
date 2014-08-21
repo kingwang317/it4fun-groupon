@@ -28,7 +28,7 @@
         <td valign="center"><?php echo $num ?></td>
         <td valign="center"><?php echo $value->plan_price ?></td>
         <td valign="center"><?php echo $price*$num ?></td>
-        <td valign="center"><img class="cancel_img" data-proid='<?php echo $value->pro_id; ?>' src="<?php echo site_url() ?>templates/images/cart_cancel.png"> 取消</td>
+        <td valign="center"><img class="cancel_img" data-planid='<?php echo $value->plan_id; ?>' data-proid='<?php echo $value->pro_id; ?>' src="<?php echo site_url() ?>templates/images/cart_cancel.png"> 取消</td>
         
       </tr>
       <?php endforeach ?>
@@ -51,7 +51,10 @@
         <td valign="center"><img src="<?php echo site_url() ?>templates/images/cart_money.png"></td>
         <td valign="center" style="font-size:16px;">消費金額</td>
         <td valign="center"><span style="color:red;font-size:16px;"><?php echo $total_price ?></span></td>
-        <td colspan="3" align="right" valign="center" style="line-height:70px;"><img src="<?php echo site_url() ?>templates/images/cart_btn1.png"> <br><img  onclick="$('#divShow').show();" id="login_btn" style="cursor:pointer;" src="<?php echo site_url() ?>templates/images/cart_btn2.png"></td>
+        <td colspan="3" align="right" valign="center" style="line-height:70px;">
+          <img onclick='javascript:location.href="<?php echo site_url() ?>payment"' src="<?php echo site_url() ?>templates/images/cart_btn1.png"> <br>
+          <img onclick="$('#divShow').show();" id="login_btn" style="cursor:pointer;" src="<?php echo site_url() ?>templates/images/cart_btn2.png">
+        </td>
       </tr>
   <?php else: ?>
     <tr>
@@ -88,7 +91,7 @@
       <!-- <span  style="color:red">error</span><br> -->
       電子信箱：<input type="text" class="mail"><br>
       輸入密碼：<input type="password" ><br>
-        <a >忘記密碼</a>
+        <a href="<?php echo site_url()."forget" ?>">忘記密碼</a>
         <img src="<?php echo site_url() ?>templates/images/login_btn.png"></div>
     </form>
   </div>

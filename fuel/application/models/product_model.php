@@ -64,11 +64,15 @@ class Product_model extends CI_Model {
 
     function get_cart_pro_list($pro_ids)
     {
+        if (!isset($pro_ids) || empty($pro_ids)) {
+            return;
+        }
+        
         $result = FALSE;
-        $today = date('Y-m-d h:y:s');
+        $today = date('Y-m-d h:y:s'); 
 
         $sql = @"SELECT * FROM mod_product a inner join  (
-                    SELECT pro_id AS p_id ,MAX(plan_price) AS plan_price FROM mod_plan GROUP BY pro_id
+                    SELECT pro_id AS p_id,plan_id ,MAX(plan_price) AS plan_price FROM mod_plan GROUP BY pro_id
                 )  b on a.pro_id = b.p_id
                 WHERE pro_status='pro_status_0001' AND pro_off_time > '$today'  
                 AND a.pro_id in ($pro_ids)
@@ -115,14 +119,16 @@ class Product_model extends CI_Model {
         $result = FALSE;
         $today = date('Y-m-d h:y:s');
 
-        $sql = @"SELECT pro_id, pro_name, pro_add_time, pro_off_time, pro_cover_photo ,pro_summary,pro_promote,
-                pro_group_price,pro_original_price , count(pro_id)  as pro_selled_cnt
+        $sql = @"SELECT p.pro_id, pro_name, pro_add_time, pro_off_time, pro_cover_photo ,pro_summary,pro_promote,
+                mp.plan_price as pro_group_price,pro_original_price , count(p.pro_id)  as pro_selled_cnt
                 FROM mod_product p left join
                 mod_order mo on p.pro_id=mo.product_id
+                left join mod_plan mp
+                on p.pro_id = mp.pro_id
                 WHERE pro_status='pro_status_0001' AND pro_off_time > '$today' 
                 $filter
-                GROUP BY pro_id, pro_name, pro_add_time, pro_off_time, pro_cover_photo ,pro_summary,pro_promote,
-                pro_group_price,pro_original_price
+                GROUP BY p.pro_id, pro_name, pro_add_time, pro_off_time, pro_cover_photo ,pro_summary,pro_promote,
+                mp.plan_price,pro_original_price
                 ORDER BY pro_order ASC, p.modi_time DESC $limit ";
 
                 // print_r($sql);
@@ -202,7 +208,8 @@ class Product_model extends CI_Model {
 
     function get_pro_detail($pro_id)
     {
-        $sql = @"SELECT * FROM mod_product WHERE pro_id=? AND pro_status = 'pro_status_0001'";
+        $sql = @"SELECT * FROM mod_product p left join mod_plan mp on p.pro_id = mp.pro_id
+        WHERE p.pro_id=? AND pro_status = 'pro_status_0001'";
         $para = array($pro_id);
         $query = $this->db->query($sql, $para);
 

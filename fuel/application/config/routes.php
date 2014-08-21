@@ -54,9 +54,12 @@ $route['category/(:num)'] = 'home/category/$1';
 $route['category'] = 'home/category/47';
 $route['news'] = 'news_front';
 $route['news/(:num)'] = 'news_front/index/$1';
-$route['addToCart/(:num)/(:num)'] = 'prod/do_set_cart_info/$1/$2';
+$route['addToCart/(:num)/(:num)/(:num)'] = 'prod/do_set_cart_info/$1/$2/$3';
 $route['removeFromCart/(:num)'] = 'prod/do_remove_cart/$1'; 
 $route['cart'] = 'prod/cart';
+$route['member/edit'] = 'member_about/edit';
+// $route['order/add'] = 'member_about/add';
+$route['forget'] = 'member_about/forget_pass';
 
 
 /*	
