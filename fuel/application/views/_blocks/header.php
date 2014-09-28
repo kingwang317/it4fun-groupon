@@ -55,6 +55,20 @@
     <div id="fb-root"></div>
     <div id="header">
       <a href="<?php echo site_url() ?>"><img src="<?=site_url()?>templates/images/logo.jpg" id="logo"></a>
+      <?php 
+           if(isset($this->fuel_auth))
+            {
+              $session_key = $this->fuel_auth->get_session_namespace();
+              $user_data = $this->session->userdata($session_key);
+            }
+            else if(isset($CI->fuel_auth))
+            {
+              $session_key = $CI->fuel_auth->get_session_namespace();
+              $user_data = $CI->session->userdata($session_key);
+            }
+            
+            $member_id = isset($user_data['member_id'])?$user_data['member_id']:"";
+       ?>
       <ul>
         <li>
           <a href="<?php echo site_url() ?>cart"><img src="<?=site_url()?>templates/images/cart_icon.png"> 購物車</a>
@@ -71,25 +85,15 @@
         <li>
           <a href="<?php echo site_url() ?>directions">購物說明</a>
         </li>
-        <li>
-          <a href="<?php echo site_url() ?>orders">訂單查詢</a>
-        </li>
+      
          <?php
-            if(isset($this->fuel_auth))
-            {
-              $session_key = $this->fuel_auth->get_session_namespace();
-              $user_data = $this->session->userdata($session_key);
-            }
-            else if(isset($CI->fuel_auth))
-            {
-              $session_key = $CI->fuel_auth->get_session_namespace();
-              $user_data = $CI->session->userdata($session_key);
-            }
-            
-            $member_id = isset($user_data['member_id'])?$user_data['member_id']:"";
+           // echo("212121212".$member_id."212121212");
             if($member_id)
             {
           ?>
+            <li>
+          <a href="<?php echo site_url() ?>orders">訂單查詢</a>
+        </li>
             <li><a href="<?php echo site_url()?>/user/logout" id="topmenu_10" title="登出">登出</a></li>
           <?php
             }

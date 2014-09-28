@@ -18,10 +18,10 @@ class Member_about extends CI_Controller {
 
 		$member_account = $this->input->get_post("member_account");
 		$password = $this->input->get_post("password");
-
 		$success = $this->fuel_auth->front_login($member_account, $password);
 		if($success)
 		{
+		// echo("1");
 			$session_key = $this->fuel_auth->get_session_namespace();
 			$user_data = $this->session->userdata($session_key);
 			$config = array(
@@ -43,6 +43,7 @@ class Member_about extends CI_Controller {
 		}
 		else
 		{
+		// echo("2");
 			$result['status'] = -1;
 		}
 

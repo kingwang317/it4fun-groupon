@@ -85,14 +85,15 @@
 <div id="login_bg" style=" display: block;"></div>
 <div id="login_box" style=" display: block;">
     <div onclick="$('#divShow').hide();" style="float:right; top:0px; width:40px; height:20px;">關閉 X</div>
-    <form >
+    <form id="sendForm" method="POST" >
       
       <h4>歡迎回來！請輸入帳號密碼： </h4>
       <!-- <span  style="color:red">error</span><br> -->
-      電子信箱：<input type="text" class="mail"><br>
-      輸入密碼：<input type="password" ><br>
+      <span id="error_msg" style="color:red; height: 15px;"></span><br> 
+      電子信箱：<input id="member_account" type="text" class="mail"><br>
+      輸入密碼：<input id="password" type="password" ><br>
         <a href="<?php echo site_url()."forget" ?>">忘記密碼</a>
-        <img src="<?php echo site_url() ?>templates/images/login_btn.png"></div>
+        <img id="login_img" src="<?php echo site_url() ?>templates/images/login_btn.png"></div>
     </form>
   </div>
 </div>
@@ -119,7 +120,27 @@
   </div> -->
 
   <script>
+
+    function ValidEmail(emailtoCheck)
+    {
+      // 規則: 1.只有一個 "@"
+      //       2.網址中, 至少要有一個".", 且不能連續出現
+      //       3.不能有空白
+      var regExp = /^[^@^\s]+@[^\.@^\s]+(\.[^\.@^\s]+)+$/;
+      if ( emailtoCheck.match(regExp) )
+        return true;
+      else
+        return false;
+    }
+
     $(document).ready(function($) {
+
+      var sendForm = $('#sendForm');
+
+      $('#login_img').on("click", function (e) {
+            $('#loginForm').submit();
+        
+      });
 
 
       $('.cancel_img').on("click", function (e) {
@@ -140,8 +161,8 @@
         $(".price").find("span").text(price);
       });
 
-      $("#loginButton").click(function(){
-        var url = '<?php echo "" ?>';
+      $("#login_img").click(function(){
+        var url = '<?php echo $login_url?>';
         var member_account = $('#member_account').val();
         var password = $('#password').val();
         var chkMail = ValidEmail(member_account);

@@ -74,6 +74,7 @@ class Prod extends CI_Controller {
 	 	$vars['pro_cart'] = $pro_cart; 
 		$vars['views'] = 'cart'; 
 		$vars['base_url'] = base_url();
+		$vars['login_url'] = base_url()."user/login";
 		$page_init = array('location' => 'cart');
 		$this->load->module_library(FUEL_FOLDER, 'fuel_page', $page_init);
 		$this->fuel_page->add_variables($vars);
