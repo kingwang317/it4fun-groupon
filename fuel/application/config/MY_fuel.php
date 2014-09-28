@@ -32,7 +32,7 @@ $config['modules_allowed'] = array(
 	'seo',
 	'validate',
 	'cronjobs',
-	'news'
+	'news',
 	);
 
 // whether the admin backend is enabled
