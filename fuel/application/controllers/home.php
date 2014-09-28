@@ -71,7 +71,44 @@ class Home extends CI_Controller {
 		$this->fuel_page->add_variables($vars);
 		$this->fuel_page->render(FALSE, FALSE); //第二個FALSE為在前台不顯示ADMIN BAR
 	}
+	function login()
+	{	
+		$this->load->helper('cookie');
+		$this->load->library('facebook'); 
+		$this->set_meta->set_meta_data();
+		fuel_set_var('page_id', "1");
+		$all_cate = array();
 
+		$this->load->model('core_model');
+
+
+		//echo "23";
+
+
+		$fb_data	= $this->core_model->get_fb_data();
+		$vars['fb_data'] = $fb_data;
+
+		//print_r($fb_data);
+
+		// use Fuel_page to render so it will grab all opt-in variables and do any necessary parsing
+		
+		$vars['all_cate']	= $all_cate;
+		$vars['base_url'] = base_url();
+		$vars['views'] = 'login';
+		$page_init = array('location' => 'login');
+		$this->load->module_library(FUEL_FOLDER, 'fuel_page', $page_init);
+		$this->fuel_page->add_variables($vars);
+		$this->fuel_page->render(FALSE, FALSE); //第二個FALSE為在前台不顯示ADMIN BAR
+		/*if($this->code_model->is_mobile()){
+			$vars['views'] = 'm_login';
+			$page_init = array('location' => 'm_login');
+			$this->fuel->pages->render('m_login', $vars);
+		}else{
+			$vars['views'] = 'login';
+			$page_init = array('location' => 'login');
+			$this->fuel->pages->render('login', $vars);
+		}*/
+	}
 	function category($pro_cate)
 	{	
 		$this->url_checker();
