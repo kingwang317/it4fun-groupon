@@ -143,8 +143,8 @@ class Payment extends CI_Controller {
 			$order_addressee_addr 	= $this->input->get_post("order_addressee_addr");
 			$order_addressee_mobile = $this->input->get_post("order_addressee_mobile");
 			$order_ship_time		= $this->input->get_post("order_ship_time");
-
-			$member_id = 5;//isset($user_data['member_id'])?$user_data['member_id']:"";
+			//bowen 先寫死 $member_id = 5; 
+			$member_id = isset($user_data['member_id'])?$user_data['member_id']:"";
 			 
 			$product_plan = new stdClass;
 			$product_plan->plan_id = -1;

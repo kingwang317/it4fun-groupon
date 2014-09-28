@@ -57,6 +57,9 @@ class Prod extends CI_Controller {
 	}
 
 	function cart(){
+
+		$this->load->module_library(FUEL_FOLDER, 'fuel_auth');
+
 		$cart = get_cookie("cart",TRUE);
 		$pro_cart = null;
 		if (isset($cart) && !empty($cart)) { 
@@ -65,11 +68,17 @@ class Prod extends CI_Controller {
 			$pro_ids = array_keys($cart);
 			$pro_ids = implode(",", $pro_ids);
 			$pro_cart = $this->product_model->get_cart_pro_list($pro_ids);
-		} 
+		}  
+
+	    $user_data = $this->fuel_auth->valid_user();
+        $member_id = isset($user_data['member_id'])?$user_data['member_id']:"";
+
+        //bowen $member_id = 5;
 	 
 
 		// print_r($cart);
 		// die;
+		$vars['member_id'] = $member_id;
 		$vars['cart'] = $cart;
 	 	$vars['pro_cart'] = $pro_cart; 
 		$vars['views'] = 'cart'; 

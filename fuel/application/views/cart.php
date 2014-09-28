@@ -53,7 +53,7 @@
         <td valign="center"><span style="color:red;font-size:16px;"><?php echo $total_price ?></span></td>
         <td colspan="3" align="right" valign="center" style="line-height:70px;">
           <img onclick='javascript:location.href="<?php echo site_url() ?>payment"' src="<?php echo site_url() ?>templates/images/cart_btn1.png"> <br>
-          <img onclick="$('#divShow').show();" id="login_btn" style="cursor:pointer;" src="<?php echo site_url() ?>templates/images/cart_btn2.png">
+          <img  id="login_btn" style="cursor:pointer;" src="<?php echo site_url() ?>templates/images/cart_btn2.png">
         </td>
       </tr>
   <?php else: ?>
@@ -137,6 +137,17 @@
 
       var sendForm = $('#sendForm');
 
+      if('' != '<?php echo $member_id ?>'){
+            
+          $('#login_btn').click(function(event) {
+               location.href = '<?php echo site_url() ?>payment';
+          });
+      }else{
+          $('#login_btn').click(function(event) {
+               $('#divShow').show();
+          });
+      }
+
       $('#login_img').on("click", function (e) {
             $('#loginForm').submit();
         
@@ -161,7 +172,7 @@
         $(".price").find("span").text(price);
       });
 
-      $("#login_img").click(function(){
+      $("#login_img").click(function(){ 
         var url = '<?php echo $login_url?>';
         var member_account = $('#member_account').val();
         var password = $('#password').val();
@@ -190,7 +201,8 @@
               console.log(data);
               if(data.status == 1)
               {
-                sendForm.submit();
+                // sendForm.submit();
+                location.href = '<?php echo site_url() ?>payment';
               }
               else
               {

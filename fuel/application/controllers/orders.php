@@ -11,8 +11,17 @@ class Orders extends CI_Controller {
 
 	function index($dataStart=0)
 	{	 
+		$this->load->module_library(FUEL_FOLDER, 'fuel_auth');
 		$base_url = base_url();
-		$member_id = 5;
+		//bowen 先寫死 $member_id = 5;
+		$user_data = $this->fuel_auth->valid_user();
+		$member_id = isset($user_data['member_id'])?$user_data['member_id']:"";
+
+		// if($member_id == "")
+		// {
+		// 	$this->comm->plu_redirect(site_url(), 0, "");
+		// }
+
 		$target_url = $base_url.'orders/';
 		$total_rows = $this->member_model->get_order_total_rows($member_id);
 		$config = $this->set_page->set_config($target_url, $total_rows, $dataStart, 10);
@@ -29,6 +38,7 @@ class Orders extends CI_Controller {
 		$this->fuel_page->add_variables($vars);
 		$this->fuel_page->render(FALSE, FALSE); //第二個FALSE為在前台不顯示ADMIN BAR
 	}
+ 
  
 	
 }
