@@ -73,6 +73,20 @@ class Fuel_auth {
 		}
 		return FALSE;
 	}
+
+	function front_fb_login($fbid, $pwd)
+	{
+		$this->_CI->load->module_model(MEMBER_FOLDER, 'member_manage_model');
+		
+		$valid_user = $this->_CI->member_manage_model->valid_fb_user($fbid, $pwd);
+		if (!empty($valid_user))
+		{
+			//$valid_user = $this->_CI->users_model->user_info($valid_user['id']);
+			$this->set_valid_user($valid_user[0]);
+			return TRUE;
+		}
+		return FALSE;
+	}
 	
 	function user_data($key = NULL)
 	{

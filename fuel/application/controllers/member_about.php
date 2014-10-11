@@ -7,6 +7,7 @@ class Member_about extends CI_Controller {
 		$this->load->model('member_model');
 		$this->load->helper('url');
 		$this->load->helper('ajax');
+		$this->load->library('comm');
 		// $this->load->library('pagination');
 		// $this->load->library('set_page');
 		$this->load->module_library(FUEL_FOLDER, 'fuel_auth');
@@ -56,6 +57,67 @@ class Member_about extends CI_Controller {
 		die();
 	}
 
+	function do_fb_login()
+	{
+		$result = array();
+
+		$member_account = "";
+		$password = "";
+
+    	$this->load->helper('cookie');
+		$this->load->model('core_model');
+
+		$data = $this->core_model->get_fb_data();
+
+
+		if(isset($data['user_profile'])){
+
+		
+			$member_account = $data['user_profile']['id'];
+			$password = $data['user_profile']['id'];
+			$name = "";
+			$fb_email = "";
+			if(isset($data['user_profile']['name'])){
+				$name = $data['user_profile']['name'];
+			}
+			if(isset($data['user_profile']['email'])){
+				$fb_email = $data['user_profile']['email'];
+			}
+
+			//$this->comm->plu_redirect(site_url(), 0, "FACEBOOK登入成功");
+			//die();
+		}else{
+			$this->comm->plu_redirect(site_url(), 0, "FACEBOOK登入失敗");
+			die();
+		}
+
+
+
+
+
+		$success = $this->fuel_auth->front_login($member_account, $password);
+
+		if(!$success){
+		$member_id = $this->member_manage_model->do_add_member($fb_email, $password, $name, "", "", "", "", "",$member_account);
+			if($member_id)
+			{
+				$success = $this->fuel_auth->front_login($fb_email, $password);
+				$session_key = $this->fuel_auth->get_session_namespace();
+				$user_data = $this->session->userdata($session_key);
+				$config = array(
+					'name' => $this->fuel_auth->get_fuel_trigger_cookie_name(), 
+					'value' => serialize(array('id' => $this->fuel_auth->user_data('id'), 'language' => $this->fuel_auth->user_data('language'))),
+					'expire' => 0,
+					'path' => WEB_PATH
+				);
+				set_cookie($config);
+			}
+		}
+
+		$this->comm->plu_redirect(site_url("payment"), 0, "FACEBOOK登入成功");
+		die();
+	}
+
 	function do_logout()
 	{
 		$this->load->library('session');
@@ -101,7 +163,7 @@ class Member_about extends CI_Controller {
 
 		// $plan_id = $this->input->get_post("pro_plan");
 		$user_data = $this->fuel_auth->valid_user();
-		$member_id = 5;//isset($user_data['member_id'])?$user_data['member_id']:$user_data['user_name'];
+		$member_id = isset($user_data['member_id'])?$user_data['member_id']:$user_data['user_name'];
 		$city_result = $this->product_manage_model->get_code('city', ' AND parent_id=-1 ORDER BY code_key ASC');
 		$ship_time_result = $this->product_manage_model->get_code('ship_time', ' AND parent_id=-1 ORDER BY code_key ASC');
 		
@@ -132,11 +194,12 @@ class Member_about extends CI_Controller {
 		$this->load->module_model(ORDER_FOLDER, 'order_manage_model');
 		$this->load->module_model(MEMBER_FOLDER, 'member_manage_model');
 		$this->load->module_model(PRODUCT_FOLDER, 'product_manage_model');
-		// $user_data = $this->fuel_auth->valid_user();
-		$member_id = 5;//isset($user_data['member_id'])?$user_data['member_id']:"";
+		$user_data = $this->fuel_auth->valid_user();
+		$member_id = isset($user_data['member_id'])?$user_data['member_id']:"";
+		
 
-		// if($member_id)
-		// {
+		if($member_id)
+		{
 			
 		$member_result = $this->member_manage_model->get_member_detail_row($member_id);
 		$filter = " AND member_id=$member_id";
@@ -151,18 +214,18 @@ class Member_about extends CI_Controller {
 		$vars['order_result'] = $order_result;
 		$vars['member_result'] = $member_result;
 		$vars['city_result'] = $city_result;
-		// }
-		// else
-		// {
-		// 	$vars['is_logined'] = -1;
-		// }
-		// $vars['login_url'] = base_url()."user/login";
+		}
+		else
+		{
+			$vars['is_logined'] = -1;
+		}
+		$vars['login_url'] = base_url()."user/login";
 		$vars['update_url'] = base_url()."update_my_data/".$member_id;
-		// $vars['forgot_url'] = base_url()."forgot_pwd";
+		$vars['forgot_url'] = base_url()."forgot_pwd";
 		$vars['views'] = 'user_edit';
 		$vars['pro_cate_1'] = base_url()."prod/pro_list/pro_cate_0001";
 		$vars['pro_cate_2'] = base_url()."prod/pro_list/pro_cate_0002";
-		// $vars['pagination'] = $this->pagination->create_links();
+		$vars['pagination'] = $this->pagination->create_links();
 		$page_init = array('location' => 'user_edit');
 		$this->load->module_library(FUEL_FOLDER, 'fuel_page', $page_init);
 		$this->fuel_page->add_variables($vars);

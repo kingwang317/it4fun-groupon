@@ -72,7 +72,7 @@ class Member_manage_model extends MY_Model {
 		return;
 	}
 
-	public function do_add_member($member_account, $member_pass, $member_name, $member_mobile, $member_city, $member_addr, $vat_num, $inv_title)
+	public function do_add_member($member_account, $member_pass, $member_name, $member_mobile, $member_city, $member_addr, $vat_num, $inv_title,$fbid=null)
 	{
 		$sql = @"INSERT INTO mod_member (member_account, 
 										member_pass, 
@@ -83,9 +83,10 @@ class Member_manage_model extends MY_Model {
 										vat_number, 
 										invoice_title, 
 										create_time,
-										modi_time
+										modi_time,
+										fbid
 										) 
-							VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())";
+							VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW(),?)";
 		$para = array(
 						$member_account, 
 						md5($member_pass),
@@ -94,7 +95,8 @@ class Member_manage_model extends MY_Model {
 						$member_city,
 						$member_addr, 
 						$vat_num,
-						$inv_title
+						$inv_title,
+						$fbid
 					);
 		$success = $this->db->query($sql, $para);
 
@@ -147,6 +149,21 @@ class Member_manage_model extends MY_Model {
 	public function valid_user($user, $pwd)
 	{
 		$sql = @"SELECT member_id, member_name FROM mod_member WHERE member_account=? AND member_pass=? LIMIT 0,1";
+		$para = array($user, md5($pwd));
+		$query = $this->db->query($sql, $para);
+
+		if($query->num_rows() > 0)
+		{
+
+			return $query->result_array();
+		}
+
+		return;
+	}
+
+	public function valid_fb_user($id, $pwd)
+	{
+		$sql = @"SELECT member_id, member_name FROM mod_member WHERE fbid=? AND member_pass=? LIMIT 0,1";
 		$para = array($user, md5($pwd));
 		$query = $this->db->query($sql, $para);
 

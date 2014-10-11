@@ -103,7 +103,7 @@ public function do_update_fbid2resume($account,$fbid){
 
         return null;
     }
-    public function get_fb_data($redirect_uri="user/do_fb_regi"){
+    public function get_fb_data($redirect_uri="member_about/do_fb_login"){
         $this->load->library('facebook'); 
         $user = $this->facebook->getUser();
         //print_r($user);
@@ -125,7 +125,7 @@ public function do_update_fbid2resume($account,$fbid){
 
         if ($user) {
 
-            $data['logout_url'] = site_url('user/logout'); // Logs off application
+            $data['logout_url'] = site_url('member_about/do_logout'); // Logs off application
             // OR 
             // Logs off FB!
             // $data['logout_url'] = $this->facebook->getLogoutUrl();
