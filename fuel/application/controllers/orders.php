@@ -1,8 +1,6 @@
 <?php
 class Orders extends CI_Controller {
-	insert into mod_code (`codekind_key`,`code_name`,`code_key`,`code_value1`,`parent_id`,`modi_time`)
-	SELECT 'COUNTRY',`COL 1` ,`COL 2`, `COL 2`,-1,NOW()  
-	FROM  `TABLE 27`  
+	
 	function __construct()
 	{
 		parent::__construct();
