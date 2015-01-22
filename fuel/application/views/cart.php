@@ -84,7 +84,7 @@
 <div id="divShow">
 <div id="login_bg" style=" display: block;"></div>
 <div id="login_box" style=" display: block;">
-    <div onclick="$('#divShow').hide();" style="float:right; top:0px; width:40px; height:20px;">關閉 X</div>
+    <div onclick="$('#divShow').hide();" style="float:right; top:0px; width:35x; height:20px;">關閉 X</div>
     <form id="sendForm" method="POST" >
       
       <h4>歡迎回來！請輸入帳號密碼： </h4>
@@ -93,8 +93,16 @@
       電子信箱：<input id="member_account" type="text" class="mail"><br>
       輸入密碼：<input id="password" type="password" ><br>
         <a href="<?php echo site_url()."forget" ?>">忘記密碼</a>
-        <img id="login_img" src="<?php echo site_url() ?>templates/images/login_btn.png"></div>
+        <img id="login_img" src="<?php echo site_url() ?>templates/images/login_btn.png">
+        <a href="<?php echo isset($fb_data)?$fb_data["login_url"]:"" ?>" style="margin-left: 80px;">
+        <img id="fb_login_img" src="<?php echo site_url() ?>templates/images/loginFB.png">
+      </a>
+
+    </div>
+
+    
     </form>
+
   </div>
 </div>
 

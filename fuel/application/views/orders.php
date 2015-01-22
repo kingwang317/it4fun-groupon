@@ -1,4 +1,3 @@
- 
 <!--banner-->
 <div id="banner_title">
 <img src="<?php echo site_url() ?>templates/images/banner_title.jpg">

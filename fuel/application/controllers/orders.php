@@ -1,11 +1,12 @@
 <?php
 class Orders extends CI_Controller {
-	
+
 	function __construct()
 	{
 		parent::__construct();
 		$this->load->model('member_model');
 		$this->load->library('pagination');
+		$this->load->library('comm');
 		$this->load->library('set_page');
 	}
 
@@ -13,14 +14,15 @@ class Orders extends CI_Controller {
 	{	 
 		$this->load->module_library(FUEL_FOLDER, 'fuel_auth');
 		$base_url = base_url();
-		//bowen 先寫死 $member_id = 5;
+		
 		$user_data = $this->fuel_auth->valid_user();
 		$member_id = isset($user_data['member_id'])?$user_data['member_id']:"";
 
-		// if($member_id == "")
-		// {
-		// 	$this->comm->plu_redirect(site_url(), 0, "");
-		// }
+		if($member_id == "")
+		{
+		 	$this->comm->plu_redirect(site_url(), 0, "您尚未登入");
+		 	die();
+		}
 
 		$target_url = $base_url.'orders/';
 		$total_rows = $this->member_model->get_order_total_rows($member_id);

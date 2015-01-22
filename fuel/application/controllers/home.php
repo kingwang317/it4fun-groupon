@@ -6,6 +6,8 @@ class Home extends CI_Controller {
 		parent::__construct();
 		$this->load->model('product_model');
 		$this->load->library('set_meta');
+		#enable query strings for this class
+		parse_str($_SERVER['QUERY_STRING'],$_GET);
 	}
 
 	function home() 
@@ -108,6 +110,35 @@ class Home extends CI_Controller {
 			$page_init = array('location' => 'login');
 			$this->fuel->pages->render('login', $vars);
 		}*/
+	}
+	function google_login()
+	{	
+		require '/fuel/application/libraries/LightOpenID.php';
+		try {
+		    # Change 'localhost' to your domain name.
+		    $openid = new LightOpenID('localhost');
+		    if(!$openid->mode)
+		    {
+		        if(isset($_GET['login']))
+		        {
+		            $openid->identity = 'https://www.google.com/accounts/o8/id';
+		            header('Location: ' . $openid->authUrl());
+		        }
+		        echo '<form action="?login" method="post"><button>Login with Google</button></form>';
+		    }
+		    elseif($openid->mode == 'cancel')
+		    {
+		        echo 'User has canceled authentication!';
+		    }
+		    else
+		    {
+		        echo 'User ' . ($openid->validate() ? $openid->identity . ' has ' : 'has not ') . 'logged in.';
+		    }
+		}
+		catch(ErrorException $e)
+		{
+		    echo $e->getMessage();
+		}
 	}
 	function category($pro_cate)
 	{	

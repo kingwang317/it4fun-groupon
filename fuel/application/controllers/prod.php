@@ -5,6 +5,7 @@ class Prod extends CI_Controller {
 	{
 		parent::__construct();
 		$this->load->model('product_model');
+
 		$this->load->helper('url');
 		$this->load->library('set_meta');
 		$this->load->library('comm');
@@ -69,7 +70,10 @@ class Prod extends CI_Controller {
 			$pro_ids = implode(",", $pro_ids);
 			$pro_cart = $this->product_model->get_cart_pro_list($pro_ids);
 		}  
-
+		$this->load->model('core_model');
+		$fb_data = $this->core_model->get_fb_data();
+		//print_r($fb_data);
+		//die();
 	    $user_data = $this->fuel_auth->valid_user();
         $member_id = isset($user_data['member_id'])?$user_data['member_id']:"";
 
@@ -78,6 +82,7 @@ class Prod extends CI_Controller {
 
 		// print_r($cart);
 		// die;
+		$vars['fb_data'] = $fb_data;
 		$vars['member_id'] = $member_id;
 		$vars['cart'] = $cart;
 	 	$vars['pro_cart'] = $pro_cart; 
