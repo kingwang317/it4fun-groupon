@@ -74,7 +74,7 @@ class Product_model extends CI_Model {
         $sql = @"SELECT * FROM mod_product a inner join  (
                     SELECT pro_id AS p_id,plan_id ,MAX(plan_price) AS plan_price FROM mod_plan GROUP BY pro_id
                 )  b on a.pro_id = b.p_id
-                WHERE pro_status='pro_status_0001' AND (pro_off_time > '$today'  OR p.always_available = 1)
+                WHERE pro_status='pro_status_0001' AND (pro_off_time > '$today'  OR always_available = 1)
                 AND a.pro_id in ($pro_ids)
                 ORDER BY pro_id  DESC ";
 
