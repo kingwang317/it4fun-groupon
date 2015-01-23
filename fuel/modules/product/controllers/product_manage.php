@@ -350,6 +350,8 @@ class Product_manage extends Fuel_base_controller {
 		$pro_off_h = $this->input->get_post("pro_off_h");
 		$pro_off_m = $this->input->get_post("pro_off_m");
 		$r_data['pro_off_time'] = $pro_off_time." ".$pro_off_h.":".$pro_off_m.":"."00";
+		$always_available = $this->input->get_post("always_available");
+		$r_data['always_available'] = isset($always_available)?1:0;
 
 		$r_data['pro_desc'] = htmlspecialchars($this->input->get_post("pro_desc"));
 		$r_data['pro_format'] = htmlspecialchars($this->input->get_post("pro_format"));
@@ -518,6 +520,8 @@ class Product_manage extends Fuel_base_controller {
 		$pro_off_h = $this->input->get_post("pro_off_h");
 		$pro_off_m = $this->input->get_post("pro_off_m");
 		$r_data['pro_off_time'] = $pro_off_time." ".$pro_off_h.":".$pro_off_m.":"."00";
+		$always_available = $this->input->get_post("always_available");
+		$r_data['always_available'] = isset($always_available)?1:0;
 
 		$r_data['pro_desc'] = htmlspecialchars($this->input->get_post("pro_desc"));
 		$r_data['pro_format'] = htmlspecialchars($this->input->get_post("pro_format"));

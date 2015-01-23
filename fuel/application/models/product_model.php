@@ -8,9 +8,9 @@ class Product_model extends CI_Model {
     function get_top_list($pro_id)
     {
         $today = date('Y-m-d h:y:s');
-        $sql = @"SELECT p.pro_id, p.pro_name, p.pro_add_time, p.pro_off_time, p.pro_cover_photo, COUNT(o.order_id) AS sell_cnt
+        $sql = @"SELECT p.pro_id, p.pro_name, p.pro_add_time, p.pro_off_time,p.always_available, p.pro_cover_photo, COUNT(o.order_id) AS sell_cnt
                 FROM mod_product p, mod_order o  
-                WHERE p.pro_status='pro_status_0001' AND p.pro_off_time > '$today' AND p.pro_id=o.product_id  AND p.pro_id <> '$pro_id'
+                WHERE p.pro_status='pro_status_0001' AND (p.pro_off_time > '$today' OR p.always_available = 1) AND p.pro_id=o.product_id  AND p.pro_id <> '$pro_id'
                 GROUP BY p.pro_id 
                 ORDER BY sell_cnt DESC, p.modi_time DESC LIMIT 0, 4";
 
@@ -74,7 +74,7 @@ class Product_model extends CI_Model {
         $sql = @"SELECT * FROM mod_product a inner join  (
                     SELECT pro_id AS p_id,plan_id ,MAX(plan_price) AS plan_price FROM mod_plan GROUP BY pro_id
                 )  b on a.pro_id = b.p_id
-                WHERE pro_status='pro_status_0001' AND pro_off_time > '$today'  
+                WHERE pro_status='pro_status_0001' AND (pro_off_time > '$today'  OR p.always_available = 1)
                 AND a.pro_id in ($pro_ids)
                 ORDER BY pro_id  DESC ";
 
@@ -119,15 +119,15 @@ class Product_model extends CI_Model {
         $result = FALSE;
         $today = date('Y-m-d h:y:s');
 
-        $sql = @"SELECT p.pro_id, pro_name, pro_add_time, pro_off_time, pro_cover_photo ,pro_summary,pro_promote,
+        $sql = @"SELECT p.pro_id, pro_name, pro_add_time, pro_off_time,always_available, pro_cover_photo ,pro_summary,pro_promote,
                 mp.plan_price as pro_group_price,pro_original_price , count(p.pro_id)  as pro_selled_cnt
                 FROM mod_product p left join
                 mod_order mo on p.pro_id=mo.product_id
                 left join mod_plan mp
                 on p.pro_id = mp.pro_id
-                WHERE pro_status='pro_status_0001' AND pro_off_time > '$today' 
+                WHERE pro_status='pro_status_0001' AND (pro_off_time > '$today' OR p.always_available = 1)
                 $filter
-                GROUP BY p.pro_id, pro_name, pro_add_time, pro_off_time, pro_cover_photo ,pro_summary,pro_promote,
+                GROUP BY p.pro_id, pro_name, pro_add_time, pro_off_time,always_available, pro_cover_photo ,pro_summary,pro_promote,
                 mp.plan_price,pro_original_price
                 ORDER BY pro_order ASC, p.modi_time DESC $limit ";
 
@@ -242,7 +242,8 @@ class Product_model extends CI_Model {
     function get_ad_data()
     {
         $today = date("Y-m-d H:i:s");
-        $sql = @"SELECT a.pro_id, a.pro_name, a.pro_off_time, a.pro_summary, b.ga_url, b.ga_w, b.ga_h FROM mod_product a, mod_gallery b WHERE a.pro_ad_photo=b.ga_id AND a.pro_off_time >= ? AND a.pro_status = 'pro_status_0001'";
+        $sql = @"SELECT a.pro_id, a.pro_name, a.pro_off_time, a.pro_summary, b.ga_url, b.ga_w, b.ga_h FROM mod_product a, mod_gallery b 
+        WHERE a.pro_ad_photo=b.ga_id AND (a.pro_off_time >= ? OR a.always_available = 1) AND a.pro_status = 'pro_status_0001'";
         $para = array($today);
         $query = $this->db->query($sql, $para);
 
@@ -352,9 +353,9 @@ class Product_model extends CI_Model {
     public function get_old_prod()
     {
         $today = date("Y-m-d H:i:s");
-        $sql = @"SELECT pro_id, pro_name, pro_add_time, pro_off_time, pro_cover_photo 
+        $sql = @"SELECT pro_id, pro_name, pro_add_time, pro_off_time,always_available, pro_cover_photo 
                 FROM mod_product 
-                WHERE pro_status='pro_status_0001' AND pro_off_time < '$today' AND pro_status = 'pro_status_0001'
+                WHERE pro_status='pro_status_0001' AND (pro_off_time < '$today'OR p.always_available = 1) AND pro_status = 'pro_status_0001'
                 ORDER BY pro_order ASC, modi_time DESC";
         $query = $this->db->query($sql);
 

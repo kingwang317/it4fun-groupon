@@ -35,13 +35,15 @@
 　<?php echo htmlspecialchars_decode($pro_detail_results->pro_desc)?>
  
 <div id="getting-started" style="color:#707070;font-size:18px;"></div>
- 
-    <script type="text/javascript">
+ <?php if ($pro_detail_results->always_available <> 1): ?>
+      <script type="text/javascript">
         $("#getting-started")
         .countdown('<?php echo str_replace("-","/",$pro_detail_results->pro_off_time)?>', function(event) {
         $(this).html(event.strftime('搶購時間剩餘： %D 天 %H 時 %M 分 %S 秒 '));
       });
      </script>
+ <?php endif ?>
+ 
 <div id="product_cart">
 <div id="left">
 <br><s>原價：<?php echo $pro_detail_results->pro_original_price?></s><br>

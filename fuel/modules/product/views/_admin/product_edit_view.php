@@ -708,6 +708,16 @@
 						</td>
 					</tr>
 					<tr>
+						<td>持續上架</td>
+						<td> 
+							<input type="checkbox" name="always_available"
+								<?php if ($row->always_available == 1): ?>
+									checked
+								<?php endif ?>
+							 />						 
+						</td>
+					</tr>
+					<tr>
 						<td>產品說明</td>
 						<td>
 							<textarea name="pro_desc" id="pro_desc">

@@ -32,7 +32,7 @@ class Product_manage_model extends MY_Model {
 
 	public function get_product_list($dataStart, $dataLan, $filter)
 	{
-		$sql = @"SELECT a.pro_id, a.pro_name, a.pro_add_time, a.pro_off_time, a.modi_time, b.code_name, COUNT(c.order_id) AS sell_cnt, SUM(c.order_price) AS sell_amt, click_num 
+		$sql = @"SELECT a.pro_id, a.pro_name, a.pro_add_time, a.pro_off_time,a.always_available, a.modi_time, b.code_name, COUNT(c.order_id) AS sell_cnt, SUM(c.order_price) AS sell_amt, click_num 
 				FROM mod_product AS a
 				INNER JOIN mod_code AS b ON a.pro_cate=b.id 
 				LEFT JOIN mod_order AS c ON c.product_id = a.pro_id AND c.RtnCode=1 
@@ -119,9 +119,10 @@ class Product_manage_model extends MY_Model {
 										seo_kw,
 										seo_desc,
 										create_time,
-										modi_time
+										modi_time,
+										always_available
 										) 
-							VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())";
+							VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW(),?)";
 		$para = array(
 						$r_data['pro_name'],
 						$r_data['pro_cate'],
@@ -137,7 +138,8 @@ class Product_manage_model extends MY_Model {
 						$r_data['pro_promote'],
 						$r_data['seo_title'],
 						$r_data['seo_kw'],
-						$r_data['seo_desc']
+						$r_data['seo_desc'],
+						$r_data['always_available']
 					);
 		$success = $this->db->query($sql, $para);
 		$pro_id = $this->db->insert_id();
@@ -220,7 +222,8 @@ class Product_manage_model extends MY_Model {
 						seo_title=?,
 						seo_kw=?,
 						seo_desc=?,
-						modi_time=NOW()
+						modi_time=NOW(),
+						always_available=?
 				WHERE pro_id=?";
 
 		$para = array(
@@ -241,6 +244,7 @@ class Product_manage_model extends MY_Model {
 						$r_data['seo_title'],
 						$r_data['seo_kw'],
 						$r_data['seo_desc'],
+						$r_data['always_available'],
 						$r_data['pro_id']
 					);
 		$success = $this->db->query($sql, $para);

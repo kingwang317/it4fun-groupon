@@ -111,7 +111,7 @@ class Prod extends CI_Controller {
 		if($pro_detail_results)
 		{
 
-			if ($pro_detail_results->pro_off_time < $today) {
+			if ($pro_detail_results->always_available != 1 && $pro_detail_results->pro_off_time < $today) {
 				$this->comm->plu_redirect(base_url(),0,'商品已下架');
 				die;
 			}

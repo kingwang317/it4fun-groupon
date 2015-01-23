@@ -82,7 +82,14 @@
 						<td><a type="button" href="<?php echo $edit_url.$rows->pro_id?>"><?php echo $rows->pro_name?></a></td>
 						<td><?php echo $rows->code_name?></td>
 						<td><?php echo substr($rows->pro_add_time, 0, 10)?></td>
-						<td><?php echo substr($rows->pro_off_time, 0, 10)?></td>
+						<td>
+							<?php if ($rows->always_available != 1): ?>
+								<?php echo substr($rows->pro_off_time, 0, 10)?>
+							<?php else: ?>
+								持續上架
+							<?php endif ?>
+							
+						</td>
 						<td><?php echo $rows->modi_time?></td>
 						<td style="text-align:center"><?php echo $rows->sell_cnt?></td>
 						<td style="text-align:right"><?php echo number_format($rows->sell_amt)?>元</td>
