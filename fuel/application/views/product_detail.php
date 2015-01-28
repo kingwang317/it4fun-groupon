@@ -94,9 +94,9 @@ if (isset($pro_plan_results)) {
 <?php foreach ($pro_interest_results as $key => $value): ?>
   <a href='<?php echo site_url()."prod/detail/$value->pro_id.php"; ?>'><img 
     <?php if ($i==0): ?>
-    style="margin-left:0px;width:227px"
+    style="margin-left:0px;"
     <?php else: ?>
-    style="width:227px" 
+    style="" 
     <?php endif ?>
   src="<?php echo $base_url.$value->photo->ga_url?>"></a>
 <?php $i++; ?>

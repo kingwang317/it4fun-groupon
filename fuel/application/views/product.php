@@ -58,7 +58,7 @@
         <div id="product_in">
         <div id="lable_new">
         </div>
-          <a href="<?php echo $prod_detail_url.$row->pro_id.".php"?>"><img src="<?php echo $base_url.$row->photo->ga_url?>" title="<?php echo $row->pro_name?>" /></a>
+          <a href="<?php echo $prod_detail_url.$row->pro_id.".php"?>"><img id="product_list_img" src="<?php echo $base_url.$row->photo->ga_url?>" title="<?php echo $row->pro_name?>" /></a>
           <p><?php echo $row->pro_summary?></p>
           <?php if ($row->always_available <> 1): ?>
               <div id='<?php echo "getting-started$i"; ?>'></div><script type="text/javascript">
@@ -68,7 +68,9 @@
               });
               </script>
           <?php endif ?>
-            
+             <?php if ($row->always_available == 0): ?>
+              <br>
+          <?php endif ?>  
                 <div id="product_gray">
                 <span class="pr_text"> <?php echo $row->pro_name?> </span><br />
                 <span class="pr_text"> 特價 $ <?php echo $row->pro_group_price ?></span> <s>原價 $ <?php echo $row->pro_original_price?></s><br />
