@@ -6,6 +6,12 @@
 </div>
 <div id="category">
 <ul> 
+  <?php if ($pro_cate == 0): ?>
+     <li class="set">全部商品</li>
+  <?php else: ?>
+     <li ><a href="<?php echo site_url() ?>category/0">全部商品</a></li>
+  <?php endif ?>
+  
  <?php if (isset($pro_cate_result)): ?>
     <?php foreach ($pro_cate_result as $key => $value): ?>
   

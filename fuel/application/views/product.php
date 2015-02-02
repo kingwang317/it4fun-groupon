@@ -34,6 +34,7 @@
 <!--banner-->
 <div id="category">
 <ul>
+  <li ><a href="category/0">全部商品</a></li>
   <?php if (isset($pro_cate_result)): ?>
     <?php foreach ($pro_cate_result as $key => $value): ?>
       <li ><a href="category/<?php echo $value->id ?>"><?php echo $value->code_name ?></a></li>

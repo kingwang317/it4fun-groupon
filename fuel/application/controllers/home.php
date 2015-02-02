@@ -144,7 +144,13 @@ class Home extends CI_Controller {
 	{	
 		$this->url_checker();
 		$this->set_meta->set_meta_data();
-		$pro_results = $this->product_model->get_pro_list(" AND pro_cate='$pro_cate' ","" );
+		$filter = '';
+
+		if ($pro_cate != 0) {
+			$filter = " AND pro_cate='$pro_cate' ";
+		}
+
+		$pro_results = $this->product_model->get_pro_list($filter,"" );
 		$ad_results = $this->product_model->get_ad_data();
 		$pro_cate_result = $this->product_model->get_code("product_cate"," AND parent_id <> -1 " );
 
