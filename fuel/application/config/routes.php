@@ -60,6 +60,8 @@ $route['cart'] = 'prod/cart';
 $route['member/edit'] = 'member_about/edit';
 // $route['order/add'] = 'member_about/add';
 $route['forget'] = 'member_about/forget_pass';
+$route['login'] = 'home/login';
+$route['login/(:any)'] = 'home/login/$1';
 
 
 /*	

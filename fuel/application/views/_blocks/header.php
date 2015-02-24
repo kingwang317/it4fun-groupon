@@ -85,8 +85,13 @@
         <li>
           <a href="<?php echo site_url() ?>directions">購物說明</a>
         </li>
-      
-         <?php
+        <?php if (!$member_id): ?>
+          <li><a href="<?=site_url()?>login">會員登入</a></li><!--未登入顯示這個-->
+        <?php else: ?>
+          <li><a href="<?php echo site_url() ?>orders">訂單查詢</a></li><!--登入後顯示這個-->
+          <li><a href="<?php echo site_url()?>/user/logout" id="topmenu_10" title="登出">登出</a></li>
+        <?php endif ?>  
+       <!--   <?php
            // echo("212121212".$member_id."212121212");
             if($member_id)
             {
@@ -97,7 +102,7 @@
             <li><a href="<?php echo site_url()?>/user/logout" id="topmenu_10" title="登出">登出</a></li>
           <?php
             }
-          ?>
+          ?> -->
       </ul>
     </div>
     
