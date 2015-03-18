@@ -428,7 +428,10 @@ class Order_manage extends Fuel_base_controller {
 			$filter = $this->input->get_post('order_filter');
 			$filter = htmlspecialchars_decode($filter);
 
-			$query = $this->order_manage_model->getExcel($pro_id, $filter);
+			// $query = $this->order_manage_model->getExcel($pro_id, $filter);
+			// print_r($filter);
+			// die;
+			$query = $this->order_manage_model->getExcelData($filter);
 			if(!$query)
             	return false;
  

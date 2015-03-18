@@ -51,11 +51,32 @@ class Order_manage_model extends MY_Model {
 
 	public function get_order_list_excel($filter)
 	{
-		$sql = @"SELECT mo.order_id, mo.product_plan, mo.order_name, mo.order_email, mo.order_mobile, mo.order_addr, mo.order_vat_number, mo.order_invoice_title,
-						mo.order_status, mo.order_ship_status, mo.order_inv_status, mo.order_addressee_name, mo.order_addressee_addr,
-						mo.order_addressee_mobile, mo.order_time, mo.order_price, mpr.pro_name, mpr.pro_id, mpl.plan_desc, mpl.plan_id, mpl.plan_price
-				 FROM mod_order mo, mod_product mpr, mod_plan mpl 
-				 WHERE mo.product_id=mpr.pro_id AND mo.product_plan=mpl.plan_id AND mo.RtnCode=1".$filter.
+		$sql = @"SELECT mo.order_id AS `訂單編號`, 
+				mo.order_name AS `訂購人姓名`, 
+				mo.order_email AS `電子郵件`,  
+				mo.order_mobile AS `手機`,  
+				mo.order_addr AS `地址`,   
+				mo.order_vat_number AS `統一編號`,  
+				mo.order_invoice_title AS `發票抬頭`,  
+				CASE order_status
+					WHEN 'order_status_0002' THEN '已確認' 
+				    ELSE '未確認'
+				END AS `訂單確認`, 
+				CASE order_status
+				    WHEN 'ship_status_0002' THEN '已出貨' 
+				    ELSE '未出貨'
+				END AS  `出貨狀態`, 
+				CASE order_status
+				    WHEN 'inv_status_0002' THEN '已開立' 
+				    ELSE '未開立'
+				END AS  `發票狀態`, 
+				mo.order_time AS `訂購時間`,
+				mpr.pro_name AS `商品名稱`, 
+				md.num AS `數量`,
+				md.amount  AS `單價`,
+				(md.num*md.amount)  AS `小計`
+				FROM mod_order_detail md,mod_order mo, mod_product mpr, mod_plan mpl 
+				WHERE md.order_id=mo.order_id AND md.plan_id=mpl.plan_id AND mpl.pro_id=mpr.pro_id ".$filter.
 				 " ORDER BY mo.modi_time DESC";
 		$query = $this->db->query($sql);
 
@@ -415,12 +436,39 @@ class Order_manage_model extends MY_Model {
 		return;
 	}
 
-	public function getExcel($pro_id, $filter)
+	public function getExcelData($filter)
+	{
+		$sql = @"SELECT mo.order_id AS `訂單編號`, 
+				mo.order_name AS `訂購人`, 
+				CASE order_status
+				    WHEN 'order_status_0002' THEN '已確認' 
+				    ELSE '未確認'
+				END AS `訂單確認`, 
+				CASE order_status
+				    WHEN 'ship_status_0002' THEN '已出貨' 
+				    ELSE '未出貨'
+				END AS  `出貨狀態`, 
+				CASE order_status
+				    WHEN 'inv_status_0002' THEN '已開立' 
+				    ELSE '未開立'
+				END AS  `發票狀態`, 
+				mo.order_time AS `訂購時間` 
+				FROM mod_order mo  WHERE 1=1 $filter
+				ORDER BY mo.order_time ASC";
+
+		 
+		$query = $this->db->query($sql);
+		return $query;
+	}
+
+	public function getExcel($order, $filter)
 	{
 		if($pro_id)
 		{
-			$sql = @"SELECT mo.order_addressee_name AS `收件人名稱`, mo.order_addressee_addr AS `收件人地址`, mo.order_addressee_mobile AS `電話`, mo.order_ship_time AS `送達時間`, mo.order_note AS `備註`, mpr.pro_name AS `產品名稱`, mp.plan_desc AS `方案` 
-					FROM mod_order mo, mod_plan mp, mod_product mpr WHERE mo.product_plan = mp.plan_id AND mo.product_id = mpr.pro_id AND mo.product_id=? AND mo.RtnCode=1 ".$filter." ORDER BY mo.order_time ASC";			
+			$sql = @"SELECT mo.order_addressee_name AS `訂單編號`, mo.order_addressee_addr AS `訂購人`, mo.order_addressee_mobile AS `訂單確認`, mo.order_ship_time AS `出貨狀態`, mo.order_note AS `發票狀態`, 
+					'' AS `訂購時間` 
+					FROM mod_order mo 
+					WHERE  mo.product_id=? AND mo.RtnCode=1 ".$filter." ORDER BY mo.order_time ASC";			
 		}
 		else
 		{
